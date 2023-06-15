@@ -62,7 +62,11 @@ flutter:
   assets:
     - images/abc.svg
     - images/OIP.jpeg
-
+    - images/Taj-Mahal.jpg
+    - images/hawamahal.webp
+    - images/mysorepalace.webp
+    - images/lakecity.webp
+    - images/girl.jpg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 

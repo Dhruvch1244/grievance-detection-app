@@ -40,7 +40,7 @@ class dashboard extends StatelessWidget {
     );
   },
   child: CircleAvatar(
-    // Replace with your image path
+    backgroundImage: Image.asset('images/OIP.jpeg').image,
   ),
 ),
 
