@@ -1,20 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'loginpage.dart';
+import 'index.dart';
+import 'signup.dart';
+import 'Dashboard.dart';
+import 'upload.dart';
+import 'Profile.dart';
 
 void main() {
-  runApp(myapp());
+  runApp(MyApp());
 }
 
-class myapp extends StatelessWidget {
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+    ));
+
     return MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text(
-            'Hello, World!',
-          ),
-        ),
-        ),
+      title: 'Deshatan',
+      initialRoute: '/',
+      routes: {
+        '/': (context) => IndexPage(),
+        '/login': (context) => LoginPage(),
+        '/signup': (context) => SignUpPage(),
+        '/dashboard' : (context) =>dashboard(),
+        '/upload' : (context) => Upload(),
+        '/profile' : (context) => ProfilePage(),
+      },
     );
   }
 }
