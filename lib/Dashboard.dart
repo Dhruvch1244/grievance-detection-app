@@ -1,7 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'Profile.dart';
-class dashboard extends StatelessWidget {
+
+enum MenuOption {
+  myProfile,
+  grievances,
+  news,
+  reports,
+  settings,
+  report,
+}
+
+class dashboard extends StatefulWidget {
+  @override
+  _DashboardState createState() => _DashboardState();
+}
+
+class _DashboardState extends State<dashboard> {
+  MenuOption _selectedOption = MenuOption.myProfile;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -10,7 +26,7 @@ class dashboard extends StatelessWidget {
         leading: IconButton(
           icon: Icon(Icons.menu),
           onPressed: () {
-            // Handle menu button press
+            showMenuOptions(context);
           },
         ),
         title: Row(
@@ -32,18 +48,17 @@ class dashboard extends StatelessWidget {
               ),
             ),
             GestureDetector(
-  onTap: () {
-    // Navigation logic here
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => ProfilePage()),
-    );
-  },
-  child: CircleAvatar(
-    backgroundImage: Image.asset('images/OIP.jpeg').image,
-  ),
-),
-
+              onTap: () {
+                // Navigation logic here
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ProfilePage()),
+                );
+              },
+              child: CircleAvatar(
+                backgroundImage: AssetImage('images/OIP.jpeg'),
+              ),
+            ),
           ],
         ),
       ),
@@ -51,34 +66,32 @@ class dashboard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-  mainAxisAlignment: MainAxisAlignment.center,
-  children: [
-    Align(
-      alignment: Alignment.center,
-      child: GestureDetector(
-        onTap: () {
-          // Handle location icon click
-          // Add your logic here
-        },
-        child: Icon(
-          Icons.location_on,
-          color: Colors.black,
-        ),
-      ),
-    ),
-    SizedBox(width: 8),
-    Text(
-      'Noida, UP',
-      style: TextStyle(
-        fontSize: 32,
-        fontWeight: FontWeight.bold,
-      ),
-    ),
-  ],
-),
-
-
-          Expanded(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Align(
+                alignment: Alignment.center,
+                child: GestureDetector(
+                  onTap: () {
+                    // Handle location icon click
+                    // Add your logic here
+                  },
+                  child: Icon(
+                    Icons.location_on,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+              SizedBox(width: 8),
+              Text(
+                'Noida, UP',
+                style: TextStyle(
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+                    Expanded(
             child: ListView(
               children: [
                 Container(
@@ -172,25 +185,138 @@ class dashboard extends StatelessWidget {
               ],
             ),
           ),
+       
         ],
       ),
       floatingActionButton: FloatingActionButton(
-  onPressed: () {
-    // Navigate to other page
-    // Add your logic here
-    Navigator.pushNamed(context, '/upload');
-  },
-  backgroundColor: Colors.green, // Set the background color to green
-  child: Icon(
-    Icons.add,
-    size: 48, // Increase the size of the icon
-  ),
-),
-
+        onPressed: () {
+          // Navigate to other page
+          // Add your logic here
+          Navigator.pushNamed(context, '/upload');
+        },
+        backgroundColor: Colors.green, // Set the background color to green
+        child: Icon(
+          Icons.add,
+          size: 48, // Increase the size of the icon
+        ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedOption.index,
+        onTap: (int index) {
+          setState(() {
+            _selectedOption = MenuOption.values[index];
+          });
+        },
+        backgroundColor: Color(0xFF023436), // Custom background color
+        unselectedItemColor: const Color.fromARGB(255, 158, 0, 0), // Color of unselected icons
+        selectedItemColor: Colors.blue,
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.mobile_friendly),
+            label: 'Dashboard',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.error),
+            label: 'Grievances',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.article),
+            label: 'News',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.folder),
+            label: 'Reports',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Settings',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.report),
+            label: 'Report',
+          ),
+        ],
+      ),
     );
   }
-}
 
+  void showMenuOptions(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Menu'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ListTile(
+              leading: Icon(Icons.person),
+              title: Text('My Profile'),
+              onTap: () {
+                Navigator.pop(context);
+                setState(() {
+                  _selectedOption = MenuOption.myProfile;
+                });
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.error),
+              title: Text('Grievances'),
+              onTap: () {
+                Navigator.pop(context);
+                setState(() {
+                  _selectedOption = MenuOption.grievances;
+                });
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.article),
+              title: Text('News'),
+              onTap: () {
+                Navigator.pop(context);
+                setState(() {
+                  _selectedOption = MenuOption.news;
+                });
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.folder),
+              title: Text('Reports'),
+              onTap: () {
+                Navigator.pop(context);
+                setState(() {
+                  _selectedOption = MenuOption.reports;
+                });
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.settings),
+              title: Text('Settings'),
+              onTap: () {
+                Navigator.pop(context);
+                setState(() {
+                  _selectedOption = MenuOption.settings;
+                });
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.report),
+              title: Text('Report'),
+              onTap: () {
+                Navigator.pop(context);
+                setState(() {
+                  _selectedOption = MenuOption.report;
+                });
+              },
+            ),
+          ],
+        ),
+      );
+    },
+  );
+}
+}
 class Post extends StatefulWidget {
   final String title;
   final String author;
