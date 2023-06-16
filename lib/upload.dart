@@ -6,16 +6,11 @@ class Upload extends StatefulWidget {
 }
 
 class _UploadState extends State<Upload> {
-  String selectedLocation = 'Noida,UP';
+  
   String subject = '';
   String issue = '';
 
-  List<String> locationOptions = [
-    'Noida,UP',
-    'New Delhi',
-    'Chennai,TN',
-    'Hyderabad,TL',
-  ];
+  
 
   @override
   Widget build(BuildContext context) {
@@ -33,35 +28,7 @@ class _UploadState extends State<Upload> {
         child: Column(
           children: [
             SizedBox(height: 20),
-            Container(
-              width: MediaQuery.of(context).size.width * 0.9,
-              color: Color(0xFFF7F3F5),
-              padding: EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Select Location',
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  SizedBox(height: 10),
-                  DropdownButton<String>(
-                    value: selectedLocation,
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        selectedLocation = newValue!;
-                      });
-                    },
-                    items: locationOptions.map((String option) {
-                      return DropdownMenuItem<String>(
-                        value: option,
-                        child: Text(option),
-                      );
-                    }).toList(),
-                  ),
-                ],
-              ),
-            ),
+            
             SizedBox(height: 20),
             Container(
               color: Color(0xFFF7F3F5 ),
@@ -87,7 +54,6 @@ class _UploadState extends State<Upload> {
             
             SizedBox(height: 20),
             Container(
-              height: MediaQuery.of(context).size.height * 0.4,
              color: Color(0xFFF7F3F5),
               padding: EdgeInsets.symmetric(horizontal: 16),
               child: Column(
@@ -97,10 +63,8 @@ class _UploadState extends State<Upload> {
                     'Issue Raised',
                     style: TextStyle(fontSize: 20),
                   ),
-                  SizedBox(height: 7 * 8), // 7 lines * 8 pixels per line
                   Container(
                     width: MediaQuery.of(context).size.width * 0.9,
-                    height: MediaQuery.of(context).size.height * 0.2,
                     padding: EdgeInsets.all(16),
                     child: TextField(
                       maxLines: null,

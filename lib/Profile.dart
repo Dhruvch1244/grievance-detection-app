@@ -11,23 +11,26 @@ class ProfilePage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               
               children: [
-                AppBar(
-  backgroundColor: Color(0xFF023436),
-  leading: IconButton(
-    icon: Icon(Icons.arrow_back),
-    color: Colors.white,
-    onPressed: () {
-      Navigator.pushReplacementNamed(context, '/dashboard');
-    },
+PreferredSize(
+  preferredSize: Size.fromHeight(40), // Specify the desired height here
+  child: AppBar(
+    backgroundColor: Color(0xFF023436),
+    leading: IconButton(
+      icon: Icon(Icons.arrow_back),
+      color: Colors.white,
+      onPressed: () {
+        Navigator.pushReplacementNamed(context, '/dashboard');
+      },
+    ),
+    // Other app bar properties
+    // ...
   ),
-  // Other app bar properties
-  // ...
-)
-,
+),
+
 
                 Container(
-                  padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                  margin: EdgeInsets.fromLTRB(0, 50, 0, 0),
+                  padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                  margin: EdgeInsets.fromLTRB(0, 100, 0, 0),
                   child: Column(
                     children: [
                       Text(
@@ -38,25 +41,21 @@ class ProfilePage extends StatelessWidget {
                           color: Colors.white,
                         ),
                       ),
-                      Text(
-                        'The travel gazette',
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.white,
-                        ),
-                      ),
-                      SizedBox(height: 16),
                     ],
                   ),
                 ),
-
+      
                 Container(
-                  margin: EdgeInsets.fromLTRB(0, 100, 0, 0),
-                  height: MediaQuery.of(context).size.height * 0.6,
+                  margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                  padding: EdgeInsets.fromLTRB(0, 10, 0,60),
+                 
                   width: MediaQuery.of(context).size.width * 1,
                   decoration: BoxDecoration(
-                    color: Color.fromARGB(255, 255, 255, 255),
-                    borderRadius: BorderRadius.circular(48),
+                    color: Color.fromARGB(255, 255, 255, 255),borderRadius: BorderRadius.only(
+      topLeft: Radius.circular(48),
+      topRight: Radius.circular(48),
+    ),
+
                   ),
                   
                   child: Column(
