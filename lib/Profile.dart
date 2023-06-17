@@ -1,146 +1,140 @@
 import 'package:flutter/material.dart';
 
 class ProfilePage extends StatelessWidget {
+  final String username;
+
+  ProfilePage({required this.username});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Color(0xFF023436),
-        body: Center(
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              
-              children: [
-PreferredSize(
-  preferredSize: Size.fromHeight(40), // Specify the desired height here
-  child: AppBar(
-    backgroundColor: Color(0xFF023436),
-    leading: IconButton(
-      icon: Icon(Icons.arrow_back),
-      color: Colors.white,
-      onPressed: () {
-        Navigator.pushReplacementNamed(context, '/dashboard');
-      },
-    ),
-    // Other app bar properties
-    // ...
-  ),
-),
-
-
-                Container(
-                  padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                  margin: EdgeInsets.fromLTRB(0, 100, 0, 0),
-                  child: Column(
-                    children: [
-                      Text(
-                        'Deshatan.',
-                        style: TextStyle(
-                          fontSize: 36,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
+      backgroundColor: Color(0xFF023436),
+      body: Center(
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              PreferredSize(
+                preferredSize: Size.fromHeight(40),
+                child: AppBar(
+                  backgroundColor: Color(0xFF023436),
+                  leading: IconButton(
+                    icon: Icon(Icons.arrow_back),
+                    color: Colors.white,
+                    onPressed: () {
+                      Navigator.pushReplacementNamed(context, '/dashboard');
+                    },
                   ),
                 ),
-      
-                Container(
-                  margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                  padding: EdgeInsets.fromLTRB(0, 10, 0,60),
-                 
-                  width: MediaQuery.of(context).size.width * 1,
-                  decoration: BoxDecoration(
-                    color: Color.fromARGB(255, 255, 255, 255),borderRadius: BorderRadius.only(
-      topLeft: Radius.circular(48),
-      topRight: Radius.circular(48),
-    ),
-
+              ),
+              Container(
+                padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                margin: EdgeInsets.fromLTRB(0, 100, 0, 0),
+                child: Column(
+                  children: [
+                    Text(
+                      'Deshatan.',
+                      style: TextStyle(
+                        fontSize: 36,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                padding: EdgeInsets.fromLTRB(0, 10, 0, 60),
+                width: MediaQuery.of(context).size.width * 1,
+                decoration: BoxDecoration(
+                  color: Color.fromARGB(255, 255, 255, 255),
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(48),
+                    topRight: Radius.circular(48),
                   ),
-                  
-                  child: Column(
-                    children: [
-                     
+                ),
+                child: Column(
+                  children: [
                     Container(
-                 
-                      padding: EdgeInsets.fromLTRB(0, 0, 0,0),
-              child: Card(
-          child: CircleAvatar(
-          radius: 60, // Adjust the radius as needed
-          backgroundImage: AssetImage('images/girl.jpg'),
-        backgroundColor: Colors.transparent,
-  ),
-),
-
-          ),
-                  Padding(
-  padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
-  child: Text(
-    'Advika',
-    style: TextStyle(
-      fontSize: 32,
-      fontWeight: FontWeight.bold,
-      color: Colors.black,
-    ),
-  ),
-),
-            
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                       children: [
-                          Text(
-                        '15 Followers  ',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.black,
+                      padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                      child: Card(
+                        child: CircleAvatar(
+                          radius: 60,
+                          backgroundImage: AssetImage('images/girl.jpg'),
+                          backgroundColor: Colors.transparent,
                         ),
                       ),
-                        Text(
-                        '15 Following',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.black,
-                        ),
-                      ),
-                       ], 
                     ),
                     Padding(
-  padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-  child: Text(
-    'Noida',
-    style: TextStyle(
-      fontSize: 24,
-      fontWeight: FontWeight.bold,
-      color: Colors.black,
-    ),
-  ),
-),
-                      Container(
-                        width: 350,
-  decoration: BoxDecoration(
-    border: Border.all(color: Colors.grey),
-  ),
-  child: Row(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      Container(
-        padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-        child: Card(
-          child: Text(
-            'Reviews (02)',
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.black,
-            ),
-          ),
-        ),
-      ),
-      Container(
-        padding: EdgeInsets.fromLTRB(20, 0, 110, 0),
-        child: Card(
-          child: Text(
-            'Grievances',
-            style: TextStyle(
+                      padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
+                      child: Text(
+                        username,
+                        style: TextStyle(
+                          fontSize: 32,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          '15 Followers  ',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.black,
+                          ),
+                        ),
+                        Text(
+                          '15 Following',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                      child: Text(
+                        'Noida',
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      width: 350,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                            child: Card(
+                              child: Text(
+                                'Reviews (02)',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            padding: EdgeInsets.fromLTRB(20, 0, 110, 0),
+                            child: Card(
+                              child: Text(
+                                'Grievances',
+                                style: TextStyle(
+                                 
+
               fontSize: 16,
               color: Colors.black,
             ),

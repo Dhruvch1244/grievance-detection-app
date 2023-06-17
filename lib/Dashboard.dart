@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:newapp/MyProfile.dart';
 import 'Profile.dart';
 
 enum MenuOption {
@@ -52,7 +53,7 @@ class _DashboardState extends State<dashboard> {
                 // Navigation logic here
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => ProfilePage()),
+                  MaterialPageRoute(builder: (context) => MyProfile()),
                 );
               },
               child: CircleAvatar(
@@ -320,13 +321,24 @@ class _PostState extends State<Post> {
             ),
           ),
           SizedBox(height: 8),
-          Text(
-            'Posted by u/${widget.author}',
-            style: TextStyle(
-              color: Colors.grey,
-              fontStyle: FontStyle.italic,
-            ),
-          ),
+          GestureDetector(
+  onTap: () {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => ProfilePage(username : widget.author)),
+    );
+  },
+  child: Text(
+    'Posted by u/${widget.author}',
+    style: TextStyle(
+      color: Colors.grey,
+      fontStyle: FontStyle.italic,
+    ),
+  ),
+),
+
+
+
           SizedBox(height: 8),
           Text(widget.content),
           SizedBox(height: 8),

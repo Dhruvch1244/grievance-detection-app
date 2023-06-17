@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:newapp/EditProfile.dart';
 import 'package:newapp/upload.dart';
 
 class MyProfile extends StatefulWidget {
@@ -49,7 +50,7 @@ class _MyProfileState extends State<MyProfile> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => MyProfile()),
+                      MaterialPageRoute(builder: (context) => EditProfile()),
                     );
                   },
                 ),

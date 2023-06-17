@@ -7,6 +7,8 @@ import 'Dashboard.dart'; // Update import statement
 import 'upload.dart';
 import 'Profile.dart'; // Update import statement
 import 'MyProfile.dart';
+import 'EditProfile.dart';
+
 void main() {
   runApp(MyApp());
 }
@@ -27,8 +29,9 @@ class MyApp extends StatelessWidget {
         '/signup': (context) => SignUpPage(),
         '/dashboard': (context) => dashboard(), // Update route name
         '/upload': (context) => Upload(),
-        '/profile': (context) => ProfilePage(),
+        '/profile': (context) => ProfilePage(username: 'Advika'),
         '/MyProfile' : (context) => MyProfile(),
+        '/EditProfile' : (context) => EditProfile(),
       },
     );
   }
