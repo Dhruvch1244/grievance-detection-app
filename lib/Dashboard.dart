@@ -200,43 +200,7 @@ class _DashboardState extends State<dashboard> {
           size: 48, // Increase the size of the icon
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedOption.index,
-        onTap: (int index) {
-          setState(() {
-            _selectedOption = MenuOption.values[index];
-          });
-        },
-        backgroundColor: Color(0xFF023436), // Custom background color
-        unselectedItemColor: const Color.fromARGB(255, 158, 0, 0), // Color of unselected icons
-        selectedItemColor: Colors.blue,
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.mobile_friendly),
-            label: 'Dashboard',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.error),
-            label: 'Grievances',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.article),
-            label: 'News',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.folder),
-            label: 'Reports',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Settings',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.report),
-            label: 'Report',
-          ),
-        ],
-      ),
+      
     );
   }
 
@@ -257,6 +221,8 @@ class _DashboardState extends State<dashboard> {
                 Navigator.pop(context);
                 setState(() {
                   _selectedOption = MenuOption.myProfile;
+                  
+                  Navigator.pushNamed(context, '/MyProfile');
                 });
               },
             ),
@@ -280,16 +246,7 @@ class _DashboardState extends State<dashboard> {
                 });
               },
             ),
-            ListTile(
-              leading: Icon(Icons.folder),
-              title: Text('Reports'),
-              onTap: () {
-                Navigator.pop(context);
-                setState(() {
-                  _selectedOption = MenuOption.reports;
-                });
-              },
-            ),
+            
             ListTile(
               leading: Icon(Icons.settings),
               title: Text('Settings'),
