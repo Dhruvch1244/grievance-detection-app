@@ -21,6 +21,10 @@ class MyApp extends StatelessWidget {
     ));
 
     return MaterialApp(
+      theme: ThemeData(
+        fontFamily: 'Poppins',
+      ),
+
       title: 'Deshatan',
       initialRoute: '/',
       routes: {

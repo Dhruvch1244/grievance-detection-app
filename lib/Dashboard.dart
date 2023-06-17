@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:newapp/MyProfile.dart';
+import 'package:Deshatan/MyProfile.dart';
 import 'Profile.dart';
 
 enum MenuOption {
@@ -103,7 +103,7 @@ class _DashboardState extends State<dashboard> {
                     borderRadius: BorderRadius.circular(8),
                     boxShadow: [
                       BoxShadow(
-                        color: Color.fromARGB(255, 254, 0, 0).withOpacity(1),
+                        color: Color(0xFF023436).withOpacity(1),
                         spreadRadius: 2,
                         blurRadius: 4,
                         offset: Offset(0, 2),
@@ -125,7 +125,7 @@ class _DashboardState extends State<dashboard> {
                     borderRadius: BorderRadius.circular(8),
                     boxShadow: [
                       BoxShadow(
-                        color: Color.fromARGB(255, 247, 0, 255).withOpacity(1),
+                        color: Color(0xFF023436).withOpacity(1),
                         spreadRadius: 2,
                         blurRadius: 4,
                         offset: Offset(0, 2),
@@ -147,7 +147,7 @@ class _DashboardState extends State<dashboard> {
                     borderRadius: BorderRadius.circular(8),
                     boxShadow: [
                       BoxShadow(
-                        color: Color.fromARGB(255, 41, 246, 0).withOpacity(1),
+                        color: Color(0xFF023436).withOpacity(1),
                         spreadRadius: 2,
                         blurRadius: 4,
                         offset: Offset(0, 2),
@@ -169,7 +169,7 @@ class _DashboardState extends State<dashboard> {
                     borderRadius: BorderRadius.circular(8),
                     boxShadow: [
                       BoxShadow(
-                        color: Color.fromARGB(255, 255, 196, 1).withOpacity(1),
+                        color: Color(0xFF023436).withOpacity(1),
                         spreadRadius: 2,
                         blurRadius: 4,
                         offset: Offset(0, 2),

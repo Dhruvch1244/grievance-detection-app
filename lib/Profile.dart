@@ -8,25 +8,17 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text(username),
+        
+        backgroundColor: Color(0xFF023436),
+      ),
       backgroundColor: Color(0xFF023436),
       body: Center(
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              PreferredSize(
-                preferredSize: Size.fromHeight(40),
-                child: AppBar(
-                  backgroundColor: Color(0xFF023436),
-                  leading: IconButton(
-                    icon: Icon(Icons.arrow_back),
-                    color: Colors.white,
-                    onPressed: () {
-                      Navigator.pushReplacementNamed(context, '/dashboard');
-                    },
-                  ),
-                ),
-              ),
               Container(
                 padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
                 margin: EdgeInsets.fromLTRB(0, 100, 0, 0),

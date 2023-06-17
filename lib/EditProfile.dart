@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:newapp/MyProfile.dart';
-import 'package:newapp/Profile.dart';
+import 'package:Deshatan/MyProfile.dart';
+import 'package:Deshatan/Profile.dart';
 
 class EditProfile extends StatefulWidget {
   @override
