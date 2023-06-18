@@ -1,14 +1,90 @@
 import 'package:flutter/material.dart';
 import 'package:Deshatan/MyProfile.dart';
 import 'package:Deshatan/Profile.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:path/path.dart';
 
+class DatabaseHelper {
+  static final DatabaseHelper _instance = DatabaseHelper.internal();
+  factory DatabaseHelper() => _instance;
+
+  static Database? _db;
+
+  DatabaseHelper.internal();
+
+  Future<Database?> get db async {
+    if (_db != null) return _db;
+    _db = await initDb();
+    return _db;
+  }
+
+  Future<Database> initDb() async {
+    String databasesPath = await getDatabasesPath();
+    String path = join(databasesPath, 'Deshatsan.db');
+
+    // Open/create the database at a given path
+    return await openDatabase(path, version: 1, onCreate: (Database db, int version) async {
+      // Create your database tables here
+      await db.execute('CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, firstName TEXT, lastName TEXT, email TEXT, password TEXT)');
+    });
+  }
+
+  Future<int> insertUser(Map<String, dynamic> user) async {
+    Database? dbClient = await db;
+    return await dbClient!.insert('users', user);
+  }
+
+  Future<List<Map<String, dynamic>>> getUsers() async {
+    Database? dbClient = await db;
+    return await dbClient!.query('users');
+  }
+  
+  Future<Map<String, dynamic>> getUserByEmail(String email) async {
+    Database? dbClient = await db;
+    List<Map<String, dynamic>> users = await dbClient!.query(
+      'users',
+      where: 'email = ?',
+      whereArgs: [email],
+    );
+    if (users.isNotEmpty) {
+      return users.first;
+    }
+    return {};
+  }
+}
 class EditProfile extends StatefulWidget {
+  final String email;
+
+  EditProfile({required this.email});
+
   @override
   _EditProfileState createState() => _EditProfileState();
 }
 
 class _EditProfileState extends State<EditProfile> {
+    String firstName = 'JohnDoe';
+  String lastName = '1234';
+
   @override
+  void initState() {
+    super.initState();
+    fetchUserProfile();
+  }
+  Future<void> fetchUserProfile() async {
+    Map<String, dynamic> user = await DatabaseHelper().getUserByEmail(widget.email);
+    if (user.isNotEmpty) {
+      setState(() {
+        firstName = user['firstName'];
+        lastName = user['lastName'];
+        print(firstName);
+      });
+    }
+    else{
+      print("NOT FOUND");
+    }
+  }
+    @override
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -45,7 +121,7 @@ class _EditProfileState extends State<EditProfile> {
                   // Example:
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => EditProfile()),
+                    MaterialPageRoute(builder: (context) => EditProfile(email : widget.email)),
                   );
                 },
                 child: Row(
@@ -92,7 +168,7 @@ class _EditProfileState extends State<EditProfile> {
                   // Example:
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => EditProfile()),
+                    MaterialPageRoute(builder: (context) => EditProfile(email: widget.email)),
                   );
                 },
                 child: Row(
@@ -126,7 +202,7 @@ class _EditProfileState extends State<EditProfile> {
                   SizedBox(height: 8.0),
                   TextField(
                     decoration: InputDecoration(
-                      hintText: 'Enter your name',
+                      hintText: firstName+" "+lastName,
                       filled: true,
                       fillColor: Colors.grey[200],
                       contentPadding:
@@ -136,7 +212,7 @@ class _EditProfileState extends State<EditProfile> {
                         borderSide: BorderSide.none,
                       ),
                     ),
-                    controller: TextEditingController(text: 'Umesh Prakash'),
+                    
                   ),
                 ],
               ),
@@ -154,7 +230,7 @@ class _EditProfileState extends State<EditProfile> {
                   SizedBox(height: 8.0),
                   TextField(
                     decoration: InputDecoration(
-                      hintText: '9845737287',
+                      hintText: 'Enter Phone Number',
                       filled: true,
                       fillColor: Colors.grey[200],
                       contentPadding:
@@ -182,7 +258,7 @@ class _EditProfileState extends State<EditProfile> {
                   SizedBox(height: 8.0),
                   TextField(
                     decoration: InputDecoration(
-                      hintText: 'umeshprakash@gmail.com',
+                      hintText: widget.email,
                       filled: true,
                       fillColor: Colors.grey[200],
                       contentPadding:
@@ -208,7 +284,7 @@ class _EditProfileState extends State<EditProfile> {
                   SizedBox(height: 8.0),
                   TextField(
                     decoration: InputDecoration(
-                      hintText: 'Hi there its me here! I love travelling.',
+                      hintText: 'Enter Description',
                       filled: true,
                       fillColor: Colors.grey[200],
                       contentPadding:
@@ -230,7 +306,7 @@ class _EditProfileState extends State<EditProfile> {
     // Save the form data
     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => MyProfile()),
+                      MaterialPageRoute(builder: (context) => MyProfile(email : '12')),
                     );
   },
   style: ElevatedButton.styleFrom(

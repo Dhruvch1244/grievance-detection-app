@@ -1,3 +1,4 @@
+import 'package:Deshatan/Dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
@@ -103,7 +104,10 @@ SizedBox(
                     onPressed: () {
                       Navigator.of(context).pop();
                       // You can navigate to another page upon successful login
-                      Navigator.pushNamed(context, '/dashboard');
+                      Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => dashboard(email : email)),
+                    );
                     },
                     child: Text('OK'),
                   ),

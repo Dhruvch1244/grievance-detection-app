@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:Deshatan/MyProfile.dart';
 import 'Profile.dart';
-
+import 'package:sqflite/sqflite.dart';
+import 'package:path/path.dart';
+import 'upload.dart';
 enum MenuOption {
   myProfile,
   grievances,
@@ -11,16 +13,116 @@ enum MenuOption {
   report,
 }
 
-class dashboard extends StatefulWidget {
-  @override
-  _DashboardState createState() => _DashboardState();
+class DatabaseHelper {
+  static final DatabaseHelper _instance = DatabaseHelper._internal();
+  late Database _database;
+
+  factory DatabaseHelper() => _instance;
+
+  DatabaseHelper._internal() {
+    initializeDatabase();
+  }
+
+  Future<void> initializeDatabase() async {
+    final String dbPath = await getDatabasesPath();
+    final String path = join(dbPath, 'Deshatan.db');
+
+    // Create the 'posts' table if it doesn't exist
+    _database = await openDatabase(
+      path,
+      version: 1,
+      onCreate: (Database db, int version) async {
+        await db.execute('''
+          CREATE TABLE posts (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            email TEXT,
+            title TEXT,
+            content TEXT,
+            upvotes INTEGER
+          )
+        ''');
+      },
+    );
+  }
+
+  Future<int> insertPost(Map<String, dynamic> post) async {
+    await initializeDatabase(); // Ensure the database is initialized
+    final db = _database;
+    return await db.insert('posts', post);
+  }
+
+  Future<List<Map<String, dynamic>>> getPosts() async {
+    await initializeDatabase(); // Ensure the database is initialized
+    final db = _database;
+    return await db.query('posts');
+  }
+Future<void> updatePost(Map<String, dynamic> post) async {
+    await initializeDatabase(); // Ensure the database is initialized
+    final db = _database;
+
+    await db.update(
+      'posts',
+      post,
+      where: 'id = ?',
+      whereArgs: [post['id']],
+    );
+  }
+
+
+Future<Map<String, dynamic>> getUserByEmail(String email) async {
+    Database? dbClient = await _database;
+    List<Map<String, dynamic>> users = await dbClient!.query(
+      'users',
+      where: 'email = ?',
+      whereArgs: [email],
+    );
+    if (users.isNotEmpty) {
+      return users.first;
+    }
+    return {};
+  }
+
 }
 
-class _DashboardState extends State<dashboard> {
-  MenuOption _selectedOption = MenuOption.myProfile;
+
+class dashboard extends StatefulWidget {
+  final String email;
+
+  dashboard({required this.email});
 
   @override
+  _dashboardState createState() => _dashboardState();
+}
+
+
+class _dashboardState extends State<dashboard> {
+  MenuOption _selectedOption = MenuOption.myProfile;
+String firstName = 'JohnDoe';
+  String lastName = '1234';
+
+  @override
+  void initState() {
+    super.initState();
+    fetchUserProfile('12');
+  }
+  Future<void> fetchUserProfile(email) async {
+    Map<String, dynamic> user = await DatabaseHelper().getUserByEmail(email);
+    if (user.isNotEmpty) {
+      setState(() {
+        firstName = user['firstName'];
+        lastName = user['lastName'];
+        print(firstName);
+      });
+    }
+    else{
+      print("NOT FOUND");
+    }
+  }
+    @override
+
   Widget build(BuildContext context) {
+    // Access the email using widget.email
+    String email = widget.email;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xFF023436), // Custom color #023436
@@ -53,7 +155,7 @@ class _DashboardState extends State<dashboard> {
                 // Navigation logic here
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => MyProfile()),
+                  MaterialPageRoute(builder: (context) => MyProfile(email : email)),
                 );
               },
               child: CircleAvatar(
@@ -93,98 +195,53 @@ class _DashboardState extends State<dashboard> {
             ],
           ),
                     Expanded(
-            child: ListView(
-              children: [
-                Container(
-                  margin: EdgeInsets.all(8),
-                  padding: EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Color(0xFF023436).withOpacity(1),
-                        spreadRadius: 2,
-                        blurRadius: 4,
-                        offset: Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: Post(
-                    title: 'Streetlight Broken',
-                    author: 'JohnDoe123',
-                    content: 'The court in front of Silver Hall is poorly lit due to multiple incidents of broken lights',
-                    upvotes: 42,
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.all(8),
-                  padding: EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Color(0xFF023436).withOpacity(1),
-                        spreadRadius: 2,
-                        blurRadius: 4,
-                        offset: Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: Post(
-                    title: 'Roadblock',
-                    author: 'JaneSmith',
-                    content: 'An ongoing construction has rendered the road leading to the Okhla Bird Sanctuary unusable',
-                    upvotes: 75,
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.all(8),
-                  padding: EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Color(0xFF023436).withOpacity(1),
-                        spreadRadius: 2,
-                        blurRadius: 4,
-                        offset: Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: Post(
-                    title: 'Security Risk',
-                    author: 'DevDebate',
-                    content: 'Many cases of mugging reported in Sector 74, extra caution is essential',
-                    upvotes: 53,
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.all(8),
-                  padding: EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Color(0xFF023436).withOpacity(1),
-                        spreadRadius: 2,
-                        blurRadius: 4,
-                        offset: Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: Post(
-                    title: 'Water Supply Problem',
-                    author: 'SupDhru',
-                    content: 'Water is being cut for 3 hours in afternoon daily.',
-                    upvotes: 53,
-                  ),
-                ),
-              ],
+            child: FutureBuilder<List<Map<String, dynamic>>>(
+  future: DatabaseHelper().getPosts(), // Create an instance of DatabaseHelper and call getPosts()
+  builder: (context, snapshot) {
+
+    if (snapshot.connectionState == ConnectionState.waiting) {
+      return CircularProgressIndicator();
+    } else if (snapshot.hasError) {
+      return Text('Error: ${snapshot.error}');
+    } else if (snapshot.hasData) {
+      final posts = snapshot.data!;
+
+      return ListView(
+  children: [
+    for (int i = posts.length - 1; i >= 0; i--)
+      Container(
+        margin: EdgeInsets.all(8),
+        padding: EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(8),
+          boxShadow: [
+            BoxShadow(
+              color: Color(0xFF023436).withOpacity(1),
+              spreadRadius: 2,
+              blurRadius: 4,
+              offset: Offset(0, 2),
             ),
+          ],
+        ),
+        
+        child: Post(
+          
+          title: posts[i]['title'],
+          author: posts[i]['email'], // Assuming the email field stores the author name
+          content: posts[i]['content'],
+          upvotes: posts[i]['upvotes'],
+        ),
+      ),
+  ],
+);
+
+    } else {
+      return Text('No posts available.');
+    }
+  },
+),
+
           ),
        
         ],
@@ -193,7 +250,10 @@ class _DashboardState extends State<dashboard> {
         onPressed: () {
           // Navigate to other page
           // Add your logic here
-          Navigator.pushNamed(context, '/upload');
+          Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => Upload(email : widget.email)),
+    );
         },
         backgroundColor: Colors.green, // Set the background color to green
         child: Icon(
@@ -223,7 +283,10 @@ class _DashboardState extends State<dashboard> {
                 setState(() {
                   _selectedOption = MenuOption.myProfile;
                   
-                  Navigator.pushNamed(context, '/MyProfile');
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => MyProfile(email : widget.email)),
+                    );
                 });
               },
             ),
@@ -304,10 +367,23 @@ class _PostState extends State<Post> {
       }
       _isUpvoted = !_isUpvoted;
     });
+
+    // Update the upvote value in the database
+    Map<String, dynamic> post = {
+      'title': widget.title,
+      'email': widget.author,
+      'content': widget.content,
+      'upvotes': widget.upvotes,
+    };
+
+    DatabaseHelper databaseHelper = DatabaseHelper();
+    databaseHelper.updatePost(post);
   }
 
   @override
   Widget build(BuildContext context) {
+    // Widget implementation
+
     return Container(
       padding: EdgeInsets.all(16),
       child: Column(

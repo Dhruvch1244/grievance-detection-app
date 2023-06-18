@@ -31,11 +31,11 @@ class MyApp extends StatelessWidget {
         '/': (context) => IndexPage(),
         '/login': (context) => LoginPage(),
         '/signup': (context) => SignUpPage(),
-        '/dashboard': (context) => dashboard(), // Update route name
-        '/upload': (context) => Upload(),
+        '/dashboard': (context) => dashboard(email : 'Advika@gmail.com'), // Update route name
+        '/upload': (context) => Upload(email : '12'),
         '/profile': (context) => ProfilePage(username: 'Advika'),
-        '/MyProfile' : (context) => MyProfile(),
-        '/EditProfile' : (context) => EditProfile(),
+        '/MyProfile' : (context) => MyProfile(email : '12'),
+        '/EditProfile' : (context) => EditProfile(email : '12'),
       },
     );
   }

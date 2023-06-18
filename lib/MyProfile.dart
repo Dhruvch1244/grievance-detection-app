@@ -1,16 +1,75 @@
 import 'package:flutter/material.dart';
 import 'package:Deshatan/EditProfile.dart';
 import 'package:Deshatan/upload.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:path/path.dart';
+
+class DatabaseHelper {
+  static final DatabaseHelper _instance = DatabaseHelper.internal();
+  factory DatabaseHelper() => _instance;
+
+  static Database? _db;
+
+  DatabaseHelper.internal();
+
+  Future<Database?> get db async {
+    if (_db != null) return _db;
+    _db = await initDb();
+    return _db;
+  }
+
+  Future<Database> initDb() async {
+    String databasesPath = await getDatabasesPath();
+    String path = join(databasesPath, 'Deshatsan.db');
+
+    // Open/create the database at a given path
+    return await openDatabase(path, version: 1, onCreate: (Database db, int version) async {
+      // Create your database tables here
+      await db.execute('CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, firstName TEXT, lastName TEXT, email TEXT, password TEXT)');
+    });
+  }
+
+  Future<int> insertUser(Map<String, dynamic> user) async {
+    Database? dbClient = await db;
+    return await dbClient!.insert('users', user);
+  }
+
+  Future<List<Map<String, dynamic>>> getUsers() async {
+    Database? dbClient = await db;
+    return await dbClient!.query('users');
+  }
+  
+  Future<Map<String, dynamic>> getUserByEmail(String email) async {
+    Database? dbClient = await db;
+    List<Map<String, dynamic>> users = await dbClient!.query(
+      'users',
+      where: 'email = ?',
+      whereArgs: [email],
+    );
+    if (users.isNotEmpty) {
+      return users.first;
+    }
+    return {};
+  }
+}
 
 class MyProfile extends StatefulWidget {
+  final String email;
+
+  MyProfile({required this.email});
+
   @override
   _MyProfileState createState() => _MyProfileState();
 }
 
 class _MyProfileState extends State<MyProfile> {
+  
   String name = 'John Doe';
-  String email = 'johndoe@example.com';
+  String firstName = 'JohnDoe';
+  String lastName = '1234';
+
   List<String> grievances = [];
+
 
   void addGrievance(String grievance) {
     setState(() {
@@ -19,8 +78,30 @@ class _MyProfileState extends State<MyProfile> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    fetchUserProfile();
+  }
+  Future<void> fetchUserProfile() async {
+    Map<String, dynamic> user = await DatabaseHelper().getUserByEmail(widget.email);
+    if (user.isNotEmpty) {
+      setState(() {
+        firstName = user['firstName'];
+        lastName = user['lastName'];
+        print(firstName);
+      });
+    }
+    else{
+      print("NOT FOUND");
+    }
+  }
+  @override
+
   Widget build(BuildContext context) {
+    String email = widget.email;
+    print(email);
     return Scaffold(
+      
       appBar: AppBar(
         title: Text('My Profile'),
         backgroundColor: Color(0xFF023436),
@@ -42,7 +123,7 @@ class _MyProfileState extends State<MyProfile> {
                 
         SizedBox(height: 10),
                 Text(
-                  '$name',
+                  '$firstName',
                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 ),
                 IconButton(
@@ -50,7 +131,7 @@ class _MyProfileState extends State<MyProfile> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => EditProfile()),
+                      MaterialPageRoute(builder: (context) => EditProfile(email: email)),
                     );
                   },
                 ),
@@ -67,7 +148,7 @@ class _MyProfileState extends State<MyProfile> {
   onPressed: () {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => Upload()),
+      MaterialPageRoute(builder: (context) => Upload(email : widget.email)),
     );
   },
   style: ElevatedButton.styleFrom(
@@ -117,7 +198,7 @@ class _MyProfileState extends State<MyProfile> {
   onPressed: () {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => MyProfile()),
+      MaterialPageRoute(builder: (context) => MyProfile(email : email)),
     );
   },
   iconSize: 45,
@@ -144,7 +225,7 @@ class _MyProfileState extends State<MyProfile> {
   onPressed: () {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => MyProfile()),
+      MaterialPageRoute(builder: (context) => MyProfile(email : email)),
     );
   },
   iconSize: 45,
@@ -171,7 +252,7 @@ class _MyProfileState extends State<MyProfile> {
   onPressed: () {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => MyProfile()),
+      MaterialPageRoute(builder: (context) => MyProfile(email : email)),
     );
   },
   iconSize: 45,
