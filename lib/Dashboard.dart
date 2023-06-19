@@ -1,3 +1,5 @@
+import 'package:Deshatan/Grevience.dart';
+import 'package:Deshatan/News.dart';
 import 'package:flutter/material.dart';
 import 'package:Deshatan/MyProfile.dart';
 import 'Profile.dart';
@@ -297,6 +299,10 @@ String firstName = 'JohnDoe';
                 Navigator.pop(context);
                 setState(() {
                   _selectedOption = MenuOption.grievances;
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Grievance()),
+                    );
                 });
               },
             ),
@@ -307,6 +313,10 @@ String firstName = 'JohnDoe';
                 Navigator.pop(context);
                 setState(() {
                   _selectedOption = MenuOption.news;
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => News()),
+                    );
                 });
               },
             ),

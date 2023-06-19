@@ -8,10 +8,14 @@ import 'upload.dart';
 import 'Profile.dart'; // Update import statement
 import 'MyProfile.dart';
 import 'EditProfile.dart';
+import 'Grevience.dart';
+import 'News.dart';
 
-void main() {
+void main() async {
   runApp(MyApp());
 }
+
+
 
 class MyApp extends StatelessWidget {
   @override
@@ -36,6 +40,8 @@ class MyApp extends StatelessWidget {
         '/profile': (context) => ProfilePage(username: 'Advika'),
         '/MyProfile' : (context) => MyProfile(email : '12'),
         '/EditProfile' : (context) => EditProfile(email : '12'),
+        '/Grevience' : (context) => Grievance(),
+        '/News' : (context) => News(),
       },
     );
   }
