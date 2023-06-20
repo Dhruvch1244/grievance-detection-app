@@ -12,7 +12,9 @@ List<GrievanceR> grievances = [
     GrievanceR(summary: "Lack of clean drinking water", upvotes: 8, reports: 3),
     GrievanceR(summary: "Traffic jam at yamuna expressway", upvotes: 5, reports: 3),
     GrievanceR(summary: "Religious parade going in J nagar", upvotes: 1, reports: 3),
-    // Add more grievance items as needed
+    GrievanceR(summary: "Checking hwere", upvotes: 5, reports: 1),
+
+  // Add more grievance items as needed
   ];
   @override
   Widget build(BuildContext context) {

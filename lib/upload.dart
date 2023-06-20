@@ -159,7 +159,6 @@ class _UploadState extends State<Upload> {
               height: MediaQuery.of(context).size.width * 0.1,
               child: ElevatedButton(
                 onPressed: () {
-                  main();
                   uploadIssue();
                   printPosts(); // Call the uploadIssue method
                   Navigator.push(
@@ -199,31 +198,5 @@ class SubjectContainer extends StatelessWidget {
       ),
     );
   }
-}
-void main() async {
-  final database = openDatabase(
-    join(await getDatabasesPath(), 'Deshatan.db'),
-    onCreate: (db, version) {
-      return db.execute(
-        'CREATE TABLE posts(id INTEGER PRIMARY KEY, email TEXT, title TEXT, content TEXT, upvotes INTEGER)',
-      );
-    },
-    version: 1,
-  );
-
-  await database.then((db) async {
-    await db.insert(
-      'posts',
-      {
-        'email': 'dhruv@gmail.com',
-        'title': 'hey',
-        'content': 'Test',
-        'upvotes': 0,
-      },
-    );
-
-    final posts = await db.query('posts');
-    print(posts);
-  });
 }
 

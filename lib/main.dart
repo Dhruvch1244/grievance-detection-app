@@ -10,6 +10,7 @@ import 'MyProfile.dart';
 import 'EditProfile.dart';
 import 'Grevience.dart';
 import 'News.dart';
+import 'Report.dart';
 
 void main() async {
   runApp(MyApp());
@@ -42,6 +43,7 @@ class MyApp extends StatelessWidget {
         '/EditProfile' : (context) => EditProfile(email : '12'),
         '/Grevience' : (context) => Grievance(),
         '/News' : (context) => News(),
+        '/Report' : (context) => ReportIncidentScreen(),
       },
     );
   }

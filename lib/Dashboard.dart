@@ -1,5 +1,7 @@
 import 'package:Deshatan/Grevience.dart';
 import 'package:Deshatan/News.dart';
+import 'package:Deshatan/Report.dart';
+import 'package:Deshatan/Settings.dart';
 import 'package:flutter/material.dart';
 import 'package:Deshatan/MyProfile.dart';
 import 'Profile.dart';
@@ -83,6 +85,11 @@ Future<Map<String, dynamic>> getUserByEmail(String email) async {
     }
     return {};
   }
+  Future<void> deleteAllPosts() async {
+    await initializeDatabase(); // Ensure the database is initialized
+    final db = _database;
+    await db.delete('posts'); // Delete all entries in the 'posts' table
+  }
 
 }
 
@@ -145,7 +152,7 @@ String firstName = 'JohnDoe';
                 ),
                 child: TextField(
                   decoration: InputDecoration(
-                    hintText: 'Search',
+                    hintText: 'Search here',
                     border: InputBorder.none,
                     prefixIcon: Icon(Icons.search),
                   ),
@@ -188,7 +195,7 @@ String firstName = 'JohnDoe';
               ),
               SizedBox(width: 8),
               Text(
-                'Noida, UP',
+                'Noida,UP',
                 style: TextStyle(
                   fontSize: 32,
                   fontWeight: FontWeight.bold,
@@ -326,9 +333,15 @@ String firstName = 'JohnDoe';
               title: Text('Settings'),
               onTap: () {
                 Navigator.pop(context);
+
                 setState(() {
                   _selectedOption = MenuOption.settings;
                 });
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SettingsScreen()),
+
+                );
               },
             ),
             ListTile(
@@ -339,7 +352,11 @@ String firstName = 'JohnDoe';
                 setState(() {
                   _selectedOption = MenuOption.report;
                 });
-              },
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ReportIncidentScreen()),
+                );
+                },
             ),
           ],
         ),
