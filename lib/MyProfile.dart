@@ -3,6 +3,8 @@ import 'package:Deshatan/EditProfile.dart';
 import 'package:Deshatan/upload.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
+import 'package:Deshatan/Settings.dart';
+import 'package:Deshatan/Dashboard.dart';
 
 class DatabaseHelper {
   static final DatabaseHelper _instance = DatabaseHelper.internal();
@@ -38,7 +40,7 @@ class DatabaseHelper {
     Database? dbClient = await db;
     return await dbClient!.query('users');
   }
-  
+
   Future<Map<String, dynamic>> getUserByEmail(String email) async {
     Database? dbClient = await db;
     List<Map<String, dynamic>> users = await dbClient!.query(
@@ -63,7 +65,7 @@ class MyProfile extends StatefulWidget {
 }
 
 class _MyProfileState extends State<MyProfile> {
-  
+
   String name = 'John Doe';
   String firstName = 'JohnDoe';
   String lastName = '1234';
@@ -101,7 +103,7 @@ class _MyProfileState extends State<MyProfile> {
     String email = widget.email;
     print(email);
     return Scaffold(
-      
+
       appBar: AppBar(
         title: Text('My Profile'),
         backgroundColor: Color(0xFF023436),
@@ -112,173 +114,173 @@ class _MyProfileState extends State<MyProfile> {
                   SizedBox(height: 40),
 
             Row(
-  mainAxisAlignment: MainAxisAlignment.center,
-  children: [
-    Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                
-        SizedBox(height: 10),
-                Text(
-                  '$firstName',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+
+                      SizedBox(height: 10),
+                              Text(
+                                '$firstName',
+                                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                              ),
+                              IconButton(
+                                icon: Icon(Icons.edit),
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => EditProfile(email: email)),
+                                  );
+                                },
+                              ),
+                                 ],
+                          ),
+
+                      SizedBox(height: 10),
+                      Text(
+                        '$email',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                      SizedBox(height: 10),
+                      ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Upload(email : widget.email)),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  primary: Color(0xFF023436),
                 ),
-                IconButton(
-                  icon: Icon(Icons.edit),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => EditProfile(email: email)),
-                    );
-                  },
+                child: Text('Add Grievance'),
+              ),
+
+                    ],
+                  ),
+                        SizedBox(width: 10),
+                        Container(
+                          margin: EdgeInsets.fromLTRB(50, 0, 0, 0),
+                          width: 72,
+                          height: 72,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                              image: AssetImage('images/OIP.jpeg'),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                      Container(
+                                  margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
+
+                                          width: MediaQuery.of(context).size.width * 0.9,
+                          decoration: BoxDecoration(
+                                border: Border(
+                              top: BorderSide(width: 1,color: Colors.grey),
+                              bottom: BorderSide(width: 1,color: Colors.grey),
+                            ),
+                          ),
+                        child: Row(
+
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                IconButton(
+
+                                icon: Icon(Icons.arrow_upward_outlined),
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => dashboard(email: email)),
+                                  );
+                                },
+                                iconSize: 45,
+                                padding: EdgeInsets.all(0),
+                                constraints: BoxConstraints(),
+                                visualDensity: VisualDensity.compact,
+                                alignment: Alignment.center,
+                                splashRadius: 45,
+                                highlightColor: Colors.transparent,
+                                color: Colors.black,
+                                splashColor: Colors.transparent,
+                                enableFeedback: true,
+                                tooltip: 'Upvote',
+                              ),
+
+                                  Text('Upvotes'),
+                                    ],
+                                  ),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                IconButton(
+                                  icon: Icon(Icons.notifications),
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => SettingsScreen()),
+                                    );
+                                  },
+                                  iconSize: 45,
+                                  padding: EdgeInsets.all(0),
+                                  constraints: BoxConstraints(),
+                                  visualDensity: VisualDensity.compact,
+                                  alignment: Alignment.center,
+                                  splashRadius: 45,
+                                  highlightColor: Colors.transparent,
+                                  color: Colors.black,
+                                  splashColor: Colors.transparent,
+                                  enableFeedback: true,
+                                  tooltip: 'Notifications',
+                                ),
+
+                            Text('Notifications'),
+                              ],
+                            ),
+                                  Column(
+                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            IconButton(
+                                                icon: Icon(Icons.settings),
+                                                onPressed: () {
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(builder: (context) => SettingsScreen()),
+                                                  );
+                                    },
+                                    iconSize: 45,
+                                    padding: EdgeInsets.all(0),
+                                    constraints: BoxConstraints(),
+                                    visualDensity: VisualDensity.compact,
+                                    alignment: Alignment.center,
+                                    splashRadius: 45,
+                                    highlightColor: Colors.transparent,
+                                    color: Colors.black,
+                                    splashColor: Colors.transparent,
+                                    enableFeedback: true,
+                                    tooltip: 'Settings',
+                                  ),
+
+                                        Text('Settings'),
+                                  ],
+                                ),
+                  ],
                 ),
-                   ],
-            ),
-
-        SizedBox(height: 10),
-        Text(
-          '$email',
-          style: TextStyle(fontSize: 16),
-        ),
-        SizedBox(height: 10),
-        ElevatedButton(
-  onPressed: () {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => Upload(email : widget.email)),
-    );
-  },
-  style: ElevatedButton.styleFrom(
-    primary: Color(0xFF023436),
-  ),
-  child: Text('Add Grievance'),
-),
-
-      ],
-    ),
-    SizedBox(width: 10),
-    Container(
-      margin: EdgeInsets.fromLTRB(50, 0, 0, 0),
-      width: 72,
-      height: 72,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        image: DecorationImage(
-          image: AssetImage('images/OIP.jpeg'),
-          fit: BoxFit.cover,
-        ),
-      ),
-    ),
-  ],
-),
-        Container(
-          margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
-          
-                  width: MediaQuery.of(context).size.width * 0.9,
-  decoration: BoxDecoration(
-        border: Border(
-      top: BorderSide(width: 1,color: Colors.grey),
-      bottom: BorderSide(width: 1,color: Colors.grey),
-    ),
-  ),
-  child: Row(
-    
-    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-    children: [
-      
-      Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          IconButton(
-            
-  icon: Icon(Icons.arrow_upward_outlined),
-  onPressed: () {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => MyProfile(email : email)),
-    );
-  },
-  iconSize: 45,
-  padding: EdgeInsets.all(0),
-  constraints: BoxConstraints(),
-  visualDensity: VisualDensity.compact,
-  alignment: Alignment.center,
-  splashRadius: 45,
-  highlightColor: Colors.transparent,
-  color: Colors.black,
-  splashColor: Colors.transparent,
-  enableFeedback: true,
-  tooltip: 'Upvote',
-),
-
-      Text('Upvotes'),
-        ],
-      ),
-            Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          IconButton(
-  icon: Icon(Icons.notifications),
-  onPressed: () {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => MyProfile(email : email)),
-    );
-  },
-  iconSize: 45,
-  padding: EdgeInsets.all(0),
-  constraints: BoxConstraints(),
-  visualDensity: VisualDensity.compact,
-  alignment: Alignment.center,
-  splashRadius: 45,
-  highlightColor: Colors.transparent,
-  color: Colors.black,
-  splashColor: Colors.transparent,
-  enableFeedback: true,
-  tooltip: 'Notifications',
-),
-
-      Text('Notifications'),
-        ],
-      ),
-            Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          IconButton(
-  icon: Icon(Icons.settings),
-  onPressed: () {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => MyProfile(email : email)),
-    );
-  },
-  iconSize: 45,
-  padding: EdgeInsets.all(0),
-  constraints: BoxConstraints(),
-  visualDensity: VisualDensity.compact,
-  alignment: Alignment.center,
-  splashRadius: 45,
-  highlightColor: Colors.transparent,
-  color: Colors.black,
-  splashColor: Colors.transparent,
-  enableFeedback: true,
-  tooltip: 'Settings',
-),
-
-      Text('Settings'),
-        ],
-      ),
-    ],
-  ),
-),
+              ),
   Expanded(
             child: ListView(
               children: [
                 Container(
-                  
+
           margin: EdgeInsets.fromLTRB(10, 30, 10, 0),
                   padding: EdgeInsets.all(16),
                   decoration: BoxDecoration(

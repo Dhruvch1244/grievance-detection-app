@@ -11,7 +11,7 @@ import 'EditProfile.dart';
 import 'Grevience.dart';
 import 'News.dart';
 import 'Report.dart';
-
+import 'changepassword.dart';
 void main() async {
   runApp(MyApp());
 }
@@ -44,6 +44,7 @@ class MyApp extends StatelessWidget {
         '/Grevience' : (context) => Grievance(),
         '/News' : (context) => News(),
         '/Report' : (context) => ReportIncidentScreen(),
+        '/changep' : (context) => ChangePasswordScreen(),
       },
     );
   }
