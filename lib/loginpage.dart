@@ -2,11 +2,14 @@ import 'package:Deshatan/Dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+import 'firebase_options.dart';
 
 class LoginPage extends StatelessWidget {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -199,6 +202,7 @@ SizedBox(
 class DatabaseHelper {
   static final DatabaseHelper _instance = DatabaseHelper.internal();
   factory DatabaseHelper() => _instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   static Database? _db;
 
@@ -231,14 +235,19 @@ class DatabaseHelper {
     return await dbClient!.query('users');
   }
   Future<bool> checkCredentials(String email, String password) async {
-    Database? dbClient = await db;
-    List<Map<String, dynamic>> users = await dbClient!.query(
-      'users',
-      where: 'email = ? AND password = ?',
-      whereArgs: [email, password],
-    );
+    try {
+      // Query the 'users' collection
+      final querySnapshot = await _firestore
+          .collection('users')
+          .where('email', isEqualTo: email)
+          .where('password', isEqualTo: password)
+          .get();
+      return querySnapshot.docs.isNotEmpty;
+    } catch (e) {
+      print('Error checking credentials: $e');
+      return false;
+    }
 
-    return users.isNotEmpty;
   }
 
 }

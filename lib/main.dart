@@ -12,10 +12,25 @@ import 'Grevience.dart';
 import 'News.dart';
 import 'Report.dart';
 import 'changepassword.dart';
-void main() async {
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+import 'firebase_options.dart';
+
+import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+// Import the firebase_app_check plugin
+import 'package:firebase_app_check/firebase_app_check.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
   runApp(MyApp());
 }
-
 
 
 class MyApp extends StatelessWidget {

@@ -3,10 +3,20 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+import 'firebase_options.dart';
+
+import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+// Import the firebase_app_check plugin
+import 'package:firebase_app_check/firebase_app_check.dart';
 
 class DatabaseHelper {
   static final DatabaseHelper _instance = DatabaseHelper.internal();
   factory DatabaseHelper() => _instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   static Database? _db;
 
@@ -31,6 +41,11 @@ class DatabaseHelper {
 
   Future<int> insertUser(Map<String, dynamic> user) async {
     Database? dbClient = await db;
+
+// Add a new document with a generated ID
+    _firestore.collection("users").add(user).then((DocumentReference doc) =>
+        print('DocumentSnapshot added with ID: ${doc.id}'));
+
     return await dbClient!.insert('users', user);
   }
 
@@ -82,8 +97,8 @@ Future<int> insertUser(Map<String, dynamic> user) async {
                   ),
                 ),
                 Container(
-                  padding: EdgeInsets.fromLTRB(0, 20, 0, 30),
-                  height: MediaQuery.of(context).size.height * 0.65,
+                  padding: EdgeInsets.fromLTRB(0, 10, 0, 30),
+                  height: MediaQuery.of(context).size.height * 0.75,
                   width: MediaQuery.of(context).size.width * 0.9,
                   decoration: BoxDecoration(
                     color: Color.fromARGB(255, 255, 255, 255),

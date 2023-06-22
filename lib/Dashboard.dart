@@ -8,6 +8,12 @@ import 'Profile.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'upload.dart';
+
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+import 'firebase_options.dart';
+
 enum MenuOption {
   myProfile,
   grievances,
@@ -16,81 +22,74 @@ enum MenuOption {
   settings,
   report,
 }
-
 class DatabaseHelper {
   static final DatabaseHelper _instance = DatabaseHelper._internal();
-  late Database _database;
+  FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   factory DatabaseHelper() => _instance;
 
-  DatabaseHelper._internal() {
-    initializeDatabase();
-  }
-
-  Future<void> initializeDatabase() async {
-    final String dbPath = await getDatabasesPath();
-    final String path = join(dbPath, 'Deshatan.db');
-
-    // Create the 'posts' table if it doesn't exist
-    _database = await openDatabase(
-      path,
-      version: 1,
-      onCreate: (Database db, int version) async {
-        await db.execute('''
-          CREATE TABLE posts (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            email TEXT,
-            title TEXT,
-            content TEXT,
-            upvotes INTEGER
-          )
-        ''');
-      },
-    );
-  }
+  DatabaseHelper._internal();
 
   Future<int> insertPost(Map<String, dynamic> post) async {
-    await initializeDatabase(); // Ensure the database is initialized
-    final db = _database;
-    return await db.insert('posts', post);
+    try {
+      CollectionReference postsCollection = _firestore.collection('posts');
+      DocumentReference docRef = await postsCollection.add(post);
+      return 1; // Return the inserted document ID or success indicator
+    } catch (e) {
+      print('Error inserting post: $e');
+      return 0; // Return an error indicator
+    }
   }
 
   Future<List<Map<String, dynamic>>> getPosts() async {
-    await initializeDatabase(); // Ensure the database is initialized
-    final db = _database;
-    return await db.query('posts');
-  }
-Future<void> updatePost(Map<String, dynamic> post) async {
-    await initializeDatabase(); // Ensure the database is initialized
-    final db = _database;
-
-    await db.update(
-      'posts',
-      post,
-      where: 'id = ?',
-      whereArgs: [post['id']],
-    );
-  }
-
-
-Future<Map<String, dynamic>> getUserByEmail(String email) async {
-    Database? dbClient = await _database;
-    List<Map<String, dynamic>> users = await dbClient!.query(
-      'users',
-      where: 'email = ?',
-      whereArgs: [email],
-    );
-    if (users.isNotEmpty) {
-      return users.first;
+    try {
+      CollectionReference postsCollection = _firestore.collection('posts');
+      QuerySnapshot snapshot = await postsCollection.get();
+      return snapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
+    } catch (e) {
+      print('Error getting posts: $e');
+      return []; // Return an empty list or handle the error appropriately
     }
-    return {};
-  }
-  Future<void> deleteAllPosts() async {
-    await initializeDatabase(); // Ensure the database is initialized
-    final db = _database;
-    await db.delete('posts'); // Delete all entries in the 'posts' table
   }
 
+
+  Future<void> updatePost(Map<String, dynamic> post) async {
+    try {
+      CollectionReference postsCollection = _firestore.collection('posts');
+      DocumentReference docRef = postsCollection.doc(post['id']);
+      await docRef.update(post);
+    } catch (e) {
+      print('Error updating post: $e');
+    }
+  }
+
+  Future<Map<String, dynamic>> getUserByEmail(String email) async {
+    try {
+      CollectionReference usersCollection = _firestore.collection('users');
+      QuerySnapshot snapshot = await usersCollection.where('email', isEqualTo: email).limit(1).get();
+      if (snapshot.docs.isNotEmpty) {
+        return snapshot.docs.first.data() as Map<String, dynamic>;
+      }
+      return {}; // Return an empty map if no user is found
+    } catch (e) {
+      print('Error getting user by email: $e');
+      return {}; // Return an empty map or handle the error appropriately
+    }
+  }
+
+  Future<void> deleteAllPosts() async {
+    try {
+      CollectionReference postsCollection = _firestore.collection('posts');
+      QuerySnapshot snapshot = await postsCollection.get();
+      List<Future<void>> deleteFutures = [];
+      for (DocumentSnapshot doc in snapshot.docs) {
+        deleteFutures.add(doc.reference.delete());
+      }
+      await Future.wait(deleteFutures);
+    } catch (e) {
+      print('Error deleting all posts: $e');
+    }
+  }
 }
 
 
