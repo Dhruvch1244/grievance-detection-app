@@ -1,6 +1,17 @@
 # Deshatan
 
-A Grevience Detection app made in flutter.
+- A Grevience Detection app made in flutter.
+
+- Uses Firebase as backend 
+
+- [x] Working Login - Signup
+
+- [x] Working Post Feature
+
+- [ ] User profile Updating
+
+- [ ] Implementing sorting by location feature for post
+
 
 ## Contributors
 
