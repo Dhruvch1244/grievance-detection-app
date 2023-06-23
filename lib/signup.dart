@@ -48,6 +48,21 @@ class DatabaseHelper {
 
     return await dbClient!.insert('users', user);
   }
+  Future<void> insertUserProfile(String firstName, String lastName, String email, String phoneNumber, String description) async {
+    try {
+      CollectionReference usersCollection = _firestore.collection('userdata');
+      Map<String, dynamic> user = {
+        'name': '$firstName $lastName',
+        'email': email,
+        'phoneNumber': phoneNumber,
+        'description': description,
+      };
+      await usersCollection.add(user);
+      print('User profile inserted successfully!');
+    } catch (e) {
+      print('Error inserting user profile: $e');
+    }
+  }
 
   Future<List<Map<String, dynamic>>> getUsers() async {
     Database? dbClient = await db;
@@ -130,7 +145,7 @@ Future<int> insertUser(Map<String, dynamic> user) async {
                       TextField(
                         controller: _lastNameController,
                         decoration: InputDecoration(
-                          
+
                           hintText: 'Last Name',
                           prefixIcon: Icon(Icons.person_2),
                           filled: true,
@@ -140,7 +155,7 @@ Future<int> insertUser(Map<String, dynamic> user) async {
 
                       SizedBox(height: 16),
                       TextField(
-                        controller: _emailController, 
+                        controller: _emailController,
                         decoration: InputDecoration(
                           hintText: 'Email',
                           prefixIcon: Icon(Icons.email),
@@ -194,14 +209,32 @@ Future<int> insertUser(Map<String, dynamic> user) async {
     DatabaseHelper databaseHelper = DatabaseHelper();
     await databaseHelper.insertUser(user);
       print("Successfull");
-      printUsers();
-
+    await databaseHelper.insertUserProfile(firstName,lastName,email,"Enter Phone Number","Enter Description");
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('REGISTERED SUCCESSFULLY'),
+          content: Text('REGISTERED SUCCESSFULLY'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
     // Registration successful, you can navigate to another page or show a success message.
   } else {
     print("Not Successfull");
     // Show an error message indicating that all fields are required.
   }
-},
+
+  Navigator.pushNamed(context, '/login');
+                          },
 
                           style: ElevatedButton.styleFrom(
                             primary: Color(0xFF023436),
@@ -219,7 +252,7 @@ Future<int> insertUser(Map<String, dynamic> user) async {
                         ),
                       ),
 
-                  
+
                       Text(
                         'Already Have an Account?',
                       style: TextStyle(
@@ -238,31 +271,17 @@ Future<int> insertUser(Map<String, dynamic> user) async {
                         ),
                           ),
                           ),
-        
+
                     ],
                   ),
                 ),
-                
+
               ],
             ),
           ),
         ),
-        
+
       );
-      
-  }
-void printUsers() async {
-  DatabaseHelper databaseHelper = DatabaseHelper();
-  List<Map<String, dynamic>> users = await databaseHelper.getUsers();
 
-  for (Map<String, dynamic> user in users) {
-    print('ID: ${user['id']}');
-    print('First Name: ${user['firstName']}');
-    print('Last Name: ${user['lastName']}');
-    print('Email: ${user['email']}');
-    print('Password: ${user['password']}');
-    print('------------------------');
   }
-}
-
 }

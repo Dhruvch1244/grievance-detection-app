@@ -3,55 +3,99 @@ import 'package:Deshatan/MyProfile.dart';
 import 'package:Deshatan/Profile.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+import 'firebase_options.dart';
 
 class DatabaseHelper {
-  static final DatabaseHelper _instance = DatabaseHelper.internal();
+  static final DatabaseHelper _instance = DatabaseHelper._internal();
+  FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
   factory DatabaseHelper() => _instance;
 
-  static Database? _db;
+  DatabaseHelper._internal();
 
   DatabaseHelper.internal();
-
-  Future<Database?> get db async {
-    if (_db != null) return _db;
-    _db = await initDb();
-    return _db;
-  }
-
-  Future<Database> initDb() async {
-    String databasesPath = await getDatabasesPath();
-    String path = join(databasesPath, 'Deshatsan.db');
-
-    // Open/create the database at a given path
-    return await openDatabase(path, version: 1, onCreate: (Database db, int version) async {
-      // Create your database tables here
-      await db.execute('CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, firstName TEXT, lastName TEXT, email TEXT, password TEXT)');
-    });
-  }
-
-  Future<int> insertUser(Map<String, dynamic> user) async {
-    Database? dbClient = await db;
-    return await dbClient!.insert('users', user);
-  }
-
-  Future<List<Map<String, dynamic>>> getUsers() async {
-    Database? dbClient = await db;
-    return await dbClient!.query('users');
-  }
-  
   Future<Map<String, dynamic>> getUserByEmail(String email) async {
-    Database? dbClient = await db;
-    List<Map<String, dynamic>> users = await dbClient!.query(
-      'users',
-      where: 'email = ?',
-      whereArgs: [email],
-    );
-    if (users.isNotEmpty) {
-      return users.first;
+    final CollectionReference usersRef = FirebaseFirestore.instance.collection('users');
+
+    QuerySnapshot usersSnapshot = await usersRef.where('email', isEqualTo: email).limit(1).get();
+
+    if (usersSnapshot.docs.isNotEmpty) {
+      // Get the first document from the snapshot
+      QueryDocumentSnapshot userDoc = usersSnapshot.docs.first;
+
+      // Convert the document data to a Map
+      Map<String, dynamic> userData = userDoc.data() as Map<String, dynamic>;
+      print(userDoc);
+      return userData;
     }
+
     return {};
   }
+  Future<void> updatePost(Map<String, dynamic> post) async {
+    try {
+      CollectionReference postsCollection = _firestore.collection('posts');
+      DocumentReference docRef = postsCollection.doc(post['id']);
+      await docRef.update(post);
+    } catch (e) {
+      print('Error updating post: $e');
+    }
+  }
+  Future<List<Map<String, dynamic>>> getPostsByEmail(String email) async {
+    try {
+      CollectionReference postsCollection = _firestore.collection('posts');
+      QuerySnapshot snapshot = await postsCollection.where('email', isEqualTo: email).get();
+      return snapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
+    } catch (e) {
+      print('Error getting posts: $e');
+      return []; // Return an empty list or handle the error appropriately
+    }
+  }
+  Future<List<Map<String, dynamic>>> getUserProfilesByEmail(String email) async {
+    try {
+      CollectionReference usersCollection = _firestore.collection('userdata');
+      QuerySnapshot snapshot = await usersCollection.where('email', isEqualTo: email).get();
+
+      return snapshot.docs.map((doc) {
+        return {
+          'phonenumber': doc['phoneNumber'],
+          'description': doc['description'],
+        };
+      }).toList();
+    } catch (e) {
+      print('Error getting user profiles: $e');
+      return []; // Return an empty list or handle the error appropriately
+    }
+  }
+
+
+  Future<void> updateUserProfile(String email, String phoneNumber, String description) async {
+    try {
+      CollectionReference usersCollection = _firestore.collection('userdata');
+      QuerySnapshot snapshot = await usersCollection.where('email', isEqualTo: email).get();
+
+      if (snapshot.docs.isNotEmpty) {
+        DocumentSnapshot userDoc = snapshot.docs.first;
+        String docId = userDoc.id;
+
+        await usersCollection.doc(docId).update({
+          'phoneNumber': phoneNumber,
+          'description': description,
+        });
+
+        print('User profile updated successfully.');
+      } else {
+        print('User with the specified email not found.');
+      }
+    } catch (e) {
+      print('Error updating user profile: $e');
+    }
+  }
+
 }
+
 class EditProfile extends StatefulWidget {
   final String email;
 
@@ -62,9 +106,10 @@ class EditProfile extends StatefulWidget {
 }
 
 class _EditProfileState extends State<EditProfile> {
-    String firstName = 'JohnDoe';
-  String lastName = '1234';
-
+  String firstName = ' ';
+  String lastName = ' ';
+  String phonenumber = "Enter Phone Number";
+  String Description = "Enter Description";
   @override
   void initState() {
     super.initState();
@@ -86,6 +131,7 @@ class _EditProfileState extends State<EditProfile> {
     @override
 
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Edit Profile'),
@@ -231,7 +277,7 @@ class _EditProfileState extends State<EditProfile> {
                   TextField(
                     decoration: InputDecoration(
                       hintText: 'Enter Phone Number',
-                      filled: true,
+                      filled: false,
                       fillColor: Colors.grey[200],
                       contentPadding:
                           EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
@@ -285,7 +331,7 @@ class _EditProfileState extends State<EditProfile> {
                   TextField(
                     decoration: InputDecoration(
                       hintText: 'Enter Description',
-                      filled: true,
+                      filled: false,
                       fillColor: Colors.grey[200],
                       contentPadding:
                           EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
@@ -304,9 +350,11 @@ class _EditProfileState extends State<EditProfile> {
               ElevatedButton(
   onPressed: () {
     // Save the form data
+    DatabaseHelper().updateUserProfile(widget.email,phonenumber,Description);
+
     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => MyProfile(email : '12')),
+                      MaterialPageRoute(builder: (context) => MyProfile(email : widget.email)),
                     );
   },
   style: ElevatedButton.styleFrom(

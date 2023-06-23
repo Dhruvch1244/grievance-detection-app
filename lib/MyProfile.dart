@@ -5,54 +5,57 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:Deshatan/Settings.dart';
 import 'package:Deshatan/Dashboard.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+import 'firebase_options.dart';
 
 class DatabaseHelper {
-  static final DatabaseHelper _instance = DatabaseHelper.internal();
+  static final DatabaseHelper _instance = DatabaseHelper._internal();
+  FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
   factory DatabaseHelper() => _instance;
 
-  static Database? _db;
+  DatabaseHelper._internal();
 
   DatabaseHelper.internal();
-
-  Future<Database?> get db async {
-    if (_db != null) return _db;
-    _db = await initDb();
-    return _db;
-  }
-
-  Future<Database> initDb() async {
-    String databasesPath = await getDatabasesPath();
-    String path = join(databasesPath, 'Deshatsan.db');
-
-    // Open/create the database at a given path
-    return await openDatabase(path, version: 1, onCreate: (Database db, int version) async {
-      // Create your database tables here
-      await db.execute('CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, firstName TEXT, lastName TEXT, email TEXT, password TEXT)');
-    });
-  }
-
-  Future<int> insertUser(Map<String, dynamic> user) async {
-    Database? dbClient = await db;
-    return await dbClient!.insert('users', user);
-  }
-
-  Future<List<Map<String, dynamic>>> getUsers() async {
-    Database? dbClient = await db;
-    return await dbClient!.query('users');
-  }
-
   Future<Map<String, dynamic>> getUserByEmail(String email) async {
-    Database? dbClient = await db;
-    List<Map<String, dynamic>> users = await dbClient!.query(
-      'users',
-      where: 'email = ?',
-      whereArgs: [email],
-    );
-    if (users.isNotEmpty) {
-      return users.first;
+    final CollectionReference usersRef = FirebaseFirestore.instance.collection('users');
+
+    QuerySnapshot usersSnapshot = await usersRef.where('email', isEqualTo: email).limit(1).get();
+
+    if (usersSnapshot.docs.isNotEmpty) {
+      // Get the first document from the snapshot
+      QueryDocumentSnapshot userDoc = usersSnapshot.docs.first;
+
+      // Convert the document data to a Map
+      Map<String, dynamic> userData = userDoc.data() as Map<String, dynamic>;
+      print(userDoc);
+      return userData;
     }
+
     return {};
   }
+  Future<void> updatePost(Map<String, dynamic> post) async {
+    try {
+      CollectionReference postsCollection = _firestore.collection('posts');
+      DocumentReference docRef = postsCollection.doc(post['id']);
+      await docRef.update(post);
+    } catch (e) {
+      print('Error updating post: $e');
+    }
+  }
+  Future<List<Map<String, dynamic>>> getPostsByEmail(String email) async {
+    try {
+      CollectionReference postsCollection = _firestore.collection('posts');
+      QuerySnapshot snapshot = await postsCollection.where('email', isEqualTo: email).get();
+      return snapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
+    } catch (e) {
+      print('Error getting posts: $e');
+      return []; // Return an empty list or handle the error appropriately
+    }
+  }
+
 }
 
 class MyProfile extends StatefulWidget {
@@ -276,101 +279,55 @@ class _MyProfileState extends State<MyProfile> {
                   ],
                 ),
               ),
-  Expanded(
-            child: ListView(
-              children: [
-                Container(
+            Expanded(
+              child: FutureBuilder<List<Map<String, dynamic>>>(
+                future: DatabaseHelper().getPostsByEmail(widget.email), // Create an instance of DatabaseHelper and call getPosts()
+                builder: (context, snapshot) {
 
-          margin: EdgeInsets.fromLTRB(10, 30, 10, 0),
-                  padding: EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Color(0xFF023436).withOpacity(1),
-                        spreadRadius: 2,
-                        blurRadius: 4,
-                        offset: Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: Post(
-                    title: 'Streetlight Broken',
-                    author: 'JohnDoe123',
-                    content: 'The court in front of Silver Hall is poorly lit due to multiple incidents of broken lights',
-                    upvotes: 42,
-                  ),
-                ),
-                Container(
-          margin: EdgeInsets.fromLTRB(10, 30, 10, 0),
-                  padding: EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Color(0xFF023436).withOpacity(1),
-                        spreadRadius: 2,
-                        blurRadius: 4,
-                        offset: Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: Post(
-                    title: 'Roadblock',
-                    author: 'JaneSmith',
-                    content: 'An ongoing construction has rendered the road leading to the Okhla Bird Sanctuary unusable',
-                    upvotes: 75,
-                  ),
-                ),
-                Container(
-          margin: EdgeInsets.fromLTRB(10, 30, 10, 0),
-                  padding: EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Color(0xFF023436).withOpacity(1),
-                        spreadRadius: 2,
-                        blurRadius: 4,
-                        offset: Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: Post(
-                    title: 'Security Risk',
-                    author: 'DevDebate',
-                    content: 'Many cases of mugging reported in Sector 74, extra caution is essential',
-                    upvotes: 53,
-                  ),
-                ),
-                Container(
-          margin: EdgeInsets.fromLTRB(10, 30, 10, 0),
-                  padding: EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Color(0xFF023436).withOpacity(1),
-                        spreadRadius: 2,
-                        blurRadius: 4,
-                        offset: Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: Post(
-                    title: 'Water Supply Problem',
-                    author: 'SupDhru',
-                    content: 'Water is being cut for 3 hours in afternoon daily.',
-                    upvotes: 53,
-                  ),
-                ),
-              ],
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else if (snapshot.hasData) {
+                    final posts = snapshot.data!;
+
+                    return ListView(
+                      children: [
+                        for (int i = posts.length - 1; i >= 0; i--)
+                          Container(
+                            margin: EdgeInsets.all(8),
+                            padding: EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(8),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Color(0xFF023436).withOpacity(1),
+                                  spreadRadius: 2,
+                                  blurRadius: 4,
+                                  offset: Offset(0, 2),
+                                ),
+                              ],
+                            ),
+
+                            child: Post(
+
+                              title: posts[i]['title'],
+                              author: posts[i]['email'], // Assuming the email field stores the author name
+                              content: posts[i]['content'],
+                              upvotes: posts[i]['upvotes'],
+                            ),
+                          ),
+                      ],
+                    );
+
+                  } else {
+                    return Text('No posts available.');
+                  }
+                },
+              ),
+
             ),
-          ),
           ],
         ),
       ),
@@ -408,10 +365,23 @@ class _PostState extends State<Post> {
       }
       _isUpvoted = !_isUpvoted;
     });
+
+    // Update the upvote value in the database
+    Map<String, dynamic> post = {
+      'title': widget.title,
+      'email': widget.author,
+      'content': widget.content,
+      'upvotes': widget.upvotes,
+    };
+
+    DatabaseHelper databaseHelper = DatabaseHelper();
+    databaseHelper.updatePost(post);
   }
 
   @override
   Widget build(BuildContext context) {
+    // Widget implementation
+
     return Container(
       padding: EdgeInsets.all(16),
       child: Column(
@@ -425,13 +395,21 @@ class _PostState extends State<Post> {
             ),
           ),
           SizedBox(height: 8),
-          Text(
-            'Posted by u/${widget.author}',
-            style: TextStyle(
-              color: Colors.grey,
-              fontStyle: FontStyle.italic,
+          GestureDetector(
+            onTap: () {
+
+            },
+            child: Text(
+              'Posted by u/${widget.author}',
+              style: TextStyle(
+                color: Colors.grey,
+                fontStyle: FontStyle.italic,
+              ),
             ),
           ),
+
+
+
           SizedBox(height: 8),
           Text(widget.content),
           SizedBox(height: 8),
