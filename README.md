@@ -12,6 +12,8 @@
 
 - [ ] Implementing sorting by location feature for post
 
+- [ ] Adding support for summarizing text.
+
 
 ## Contributors
 
