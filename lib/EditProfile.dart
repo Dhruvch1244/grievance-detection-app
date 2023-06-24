@@ -1,16 +1,13 @@
+// ignore_for_file: prefer_interpolation_to_compose_strings
+
 import 'package:flutter/material.dart';
 import 'package:Deshatan/MyProfile.dart';
-import 'package:Deshatan/Profile.dart';
-import 'package:sqflite/sqflite.dart';
-import 'package:path/path.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import 'firebase_options.dart';
 
 class DatabaseHelper {
   static final DatabaseHelper _instance = DatabaseHelper._internal();
-  FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   factory DatabaseHelper() => _instance;
 
@@ -18,7 +15,7 @@ class DatabaseHelper {
 
   DatabaseHelper.internal();
   Future<Map<String, dynamic>> getUserByEmail(String email) async {
-    final CollectionReference usersRef = FirebaseFirestore.instance.collection('users');
+    final CollectionReference usersRef = FirebaseFirestore.instance.collection('userdata');
 
     QuerySnapshot usersSnapshot = await usersRef.where('email', isEqualTo: email).limit(1).get();
 
@@ -28,19 +25,36 @@ class DatabaseHelper {
 
       // Convert the document data to a Map
       Map<String, dynamic> userData = userDoc.data() as Map<String, dynamic>;
-      print(userDoc);
       return userData;
     }
 
     return {};
   }
+  Future<String> getPhoneByEmail(String email) async {
+    final CollectionReference usersRef = FirebaseFirestore.instance.collection('userdata');
+
+    QuerySnapshot usersSnapshot = await usersRef.where('email', isEqualTo: email).limit(1).get();
+
+    if (usersSnapshot.docs.isNotEmpty) {
+      // Get the first document from the snapshot
+      QueryDocumentSnapshot userDoc = usersSnapshot.docs.first;
+
+      // Retrieve the phone number from the document data
+      String phoneNumber = userDoc['phoneNumber'] ?? '';
+
+      return phoneNumber;
+    }
+
+    return '';
+  }
+
   Future<void> updatePost(Map<String, dynamic> post) async {
     try {
       CollectionReference postsCollection = _firestore.collection('posts');
       DocumentReference docRef = postsCollection.doc(post['id']);
       await docRef.update(post);
     } catch (e) {
-      print('Error updating post: $e');
+      return;
     }
   }
   Future<List<Map<String, dynamic>>> getPostsByEmail(String email) async {
@@ -49,7 +63,6 @@ class DatabaseHelper {
       QuerySnapshot snapshot = await postsCollection.where('email', isEqualTo: email).get();
       return snapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
     } catch (e) {
-      print('Error getting posts: $e');
       return []; // Return an empty list or handle the error appropriately
     }
   }
@@ -65,7 +78,6 @@ class DatabaseHelper {
         };
       }).toList();
     } catch (e) {
-      print('Error getting user profiles: $e');
       return []; // Return an empty list or handle the error appropriately
     }
   }
@@ -85,12 +97,9 @@ class DatabaseHelper {
           'description': description,
         });
 
-        print('User profile updated successfully.');
-      } else {
-        print('User with the specified email not found.');
       }
     } catch (e) {
-      print('Error updating user profile: $e');
+      return;
     }
   }
 
@@ -99,58 +108,71 @@ class DatabaseHelper {
 class EditProfile extends StatefulWidget {
   final String email;
 
-  EditProfile({required this.email});
+  const EditProfile({super.key, required this.email});
 
   @override
-  _EditProfileState createState() => _EditProfileState();
+  _EditProfileState createState() {
+    return _EditProfileState();
+  }
 }
 
 class _EditProfileState extends State<EditProfile> {
-  String firstName = ' ';
-  String lastName = ' ';
-  String phonenumber = "Enter Phone Number";
-  String Description = "Enter Description";
+  String firstName = '';
+  String lastName = '';
+  String phoneNumber = '';
+  String description = '';
+  TextEditingController phoneNumberController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
     fetchUserProfile();
   }
+
   Future<void> fetchUserProfile() async {
     Map<String, dynamic> user = await DatabaseHelper().getUserByEmail(widget.email);
     if (user.isNotEmpty) {
       setState(() {
-        firstName = user['firstName'];
-        lastName = user['lastName'];
-        print(firstName);
+        firstName = user['name'];
+        phoneNumber = user['phoneNumber'] ?? ''; // Set the initial value of phoneNumber
+        description = user['description'] ?? ''; // Set the initial value of description
+        phoneNumberController.text = phoneNumber; // Set the text in the phoneNumberController
+        descriptionController.text = description; // Set the text in the descriptionController
       });
     }
-    else{
-      print("NOT FOUND");
-    }
   }
+
+  @override
+  void dispose() {
+    phoneNumberController.dispose();
+    descriptionController.dispose();
+    super.dispose();
+  }
+
     @override
 
   Widget build(BuildContext context) {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Edit Profile'),
+        title: const Text('Edit Profile'),
         
-        backgroundColor: Color(0xFF023436),
+        backgroundColor: const Color(0xFF023436),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
           child: Column(
             children: [
-              Text(
+              const Text(
                 'Cover Photo',
                 style: TextStyle(
                   fontSize: 20.0,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              Container(
+              SizedBox(
                 height: 155.0,
                 width: MediaQuery.of(context).size.width * 0.9,
                 child: ClipRRect(
@@ -170,7 +192,7 @@ class _EditProfileState extends State<EditProfile> {
                     MaterialPageRoute(builder: (context) => EditProfile(email : widget.email)),
                   );
                 },
-                child: Row(
+                child: const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
@@ -188,16 +210,16 @@ class _EditProfileState extends State<EditProfile> {
                   ],
                 ),
               ),
-              SizedBox(height: 16.0),
-              Text(
+              const SizedBox(height: 16.0),
+              const Text(
                 'Profile Photo',
                 style: TextStyle(
                   fontSize: 20.0,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 16.0),
-              Container(
+              const SizedBox(height: 16.0),
+              SizedBox(
                 height: 94,
                 width: 94,
                 child: ClipRRect(
@@ -217,7 +239,7 @@ class _EditProfileState extends State<EditProfile> {
                     MaterialPageRoute(builder: (context) => EditProfile(email: widget.email)),
                   );
                 },
-                child: Row(
+                child: const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
@@ -235,9 +257,9 @@ class _EditProfileState extends State<EditProfile> {
                   ],
                 ),
               ),
-              SizedBox(height: 16.0),
+              const SizedBox(height: 16.0),
               ExpansionTile(
-                title: Text(
+                title: const Text(
                   'Name',
                   style: TextStyle(
                     fontSize: 16.0,
@@ -245,27 +267,18 @@ class _EditProfileState extends State<EditProfile> {
                   ),
                 ),
                 children: [
-                  SizedBox(height: 8.0),
-                  TextField(
-                    decoration: InputDecoration(
-                      hintText: firstName+" "+lastName,
-                      filled: true,
-                      fillColor: Colors.grey[200],
-                      contentPadding:
-                          EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                        borderSide: BorderSide.none,
-                      ),
+                  const SizedBox(height: 8.0),
+                  Text(
+                    firstName + " " + lastName,
+                    style: TextStyle(
+                      color: Colors.black,
                     ),
-                    
                   ),
                 ],
               ),
-        
 
               ExpansionTile(
-                title: Text(
+                title: const Text(
                   'Phone Number',
                   style: TextStyle(
                     fontSize: 16.0,
@@ -273,27 +286,39 @@ class _EditProfileState extends State<EditProfile> {
                   ),
                 ),
                 children: [
-                  SizedBox(height: 8.0),
+                  const SizedBox(height: 8.0),
+                  Text(
+                    phoneNumber,
+                    style: TextStyle(
+                      color: Colors.black,
+                    ),
+                  ),
+
+                  const SizedBox(height: 8.0),
                   TextField(
                     decoration: InputDecoration(
-                      hintText: 'Enter Phone Number',
+                      hintText: 'Edit Phone Number',
                       filled: false,
                       fillColor: Colors.grey[200],
                       contentPadding:
-                          EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
+                      const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8.0),
                         borderSide: BorderSide.none,
                       ),
                     ),
-                    controller: TextEditingController(),
+                    controller: phoneNumberController,
+                    onChanged: (value) {
+                      setState(() {
+                        phoneNumber = value; // Update the phoneNumber variable
+                      });
+                    },
                   ),
                 ],
               ),
 
-              // Add more ExpansionTile widgets for additional fields
               ExpansionTile(
-                title: Text(
+                title: const Text(
                   'E-mail',
                   style: TextStyle(
                     fontSize: 16.0,
@@ -301,25 +326,18 @@ class _EditProfileState extends State<EditProfile> {
                   ),
                 ),
                 children: [
-                  SizedBox(height: 8.0),
-                  TextField(
-                    decoration: InputDecoration(
-                      hintText: widget.email,
-                      filled: true,
-                      fillColor: Colors.grey[200],
-                      contentPadding:
-                          EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                        borderSide: BorderSide.none,
-                      ),
+                  const SizedBox(height: 8.0),
+                  Text(
+                    widget.email,
+                    style: TextStyle(
+                      color: Colors.black,
                     ),
-                    controller: TextEditingController(),
                   ),
                 ],
               ),
+
               ExpansionTile(
-                title: Text(
+                title: const Text(
                   'Description',
                   style: TextStyle(
                     fontSize: 16.0,
@@ -327,45 +345,57 @@ class _EditProfileState extends State<EditProfile> {
                   ),
                 ),
                 children: [
-                  SizedBox(height: 8.0),
+                  const SizedBox(height: 8.0),
+                  Text(
+                    description,
+                    style: TextStyle(
+                      color: Colors.black,
+                    ),
+                  ),
+
+                  const SizedBox(height: 8.0),
                   TextField(
                     decoration: InputDecoration(
-                      hintText: 'Enter Description',
+                      hintText: 'Description',
                       filled: false,
                       fillColor: Colors.grey[200],
                       contentPadding:
-                          EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
+                      const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8.0),
                         borderSide: BorderSide.none,
                       ),
                     ),
-                    controller: TextEditingController(),
+                    controller: descriptionController,
+                    onChanged: (value) {
+                      setState(() {
+                        description = value; // Update the description variable
+                      });
+                    },
                   ),
                 ],
               ),
               // Add more ExpansionTile widgets as needed
 
-              SizedBox(height: 16.0),
+              const SizedBox(height: 16.0),
               ElevatedButton(
   onPressed: () {
     // Save the form data
-    DatabaseHelper().updateUserProfile(widget.email,phonenumber,Description);
-
+    DatabaseHelper().updateUserProfile(widget.email, phoneNumber, description);
     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => MyProfile(email : widget.email)),
                     );
   },
   style: ElevatedButton.styleFrom(
-    primary: Color(0xFF023436), // Specify the desired button color
-    minimumSize: Size(double.infinity, 50), // Set the button width to match the parent
+    backgroundColor: const Color(0xFF023436), // Specify the desired button color
+    minimumSize: const Size(double.infinity, 50), // Set the button width to match the parent
   shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(30), // Set the border radius to 30
     ),
 
   ),
-  child: Text('Save Changes'),
+  child: const Text('Save Changes'),
 ),
 
             ],
