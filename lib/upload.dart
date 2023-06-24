@@ -1,16 +1,9 @@
 import 'package:Deshatan/Dashboard.dart';
 import 'package:flutter/material.dart';
-import 'package:Deshatan/MyProfile.dart';
-import 'package:sqflite/sqflite.dart';
-import 'package:path/path.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
-import 'firebase_options.dart';
-
 class DatabaseHelper {
   static final DatabaseHelper _instance = DatabaseHelper._internal();
-  FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   factory DatabaseHelper() => _instance;
 
@@ -22,7 +15,6 @@ class DatabaseHelper {
       DocumentReference docRef = await postsCollection.add(post);
       return 1; // Return the inserted document ID or success indicator
     } catch (e) {
-      print('Error inserting post: $e');
       return 0; // Return an error indicator
     }
   }
@@ -33,7 +25,6 @@ class DatabaseHelper {
       QuerySnapshot snapshot = await postsCollection.get();
       return snapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
     } catch (e) {
-      print('Error getting posts: $e');
       return []; // Return an empty list or handle the error appropriately
     }
   }
@@ -45,7 +36,7 @@ class DatabaseHelper {
       DocumentReference docRef = postsCollection.doc(post['id']);
       await docRef.update(post);
     } catch (e) {
-      print('Error updating post: $e');
+      return;
     }
   }
 
@@ -58,7 +49,6 @@ class DatabaseHelper {
       }
       return {}; // Return an empty map if no user is found
     } catch (e) {
-      print('Error getting user by email: $e');
       return {}; // Return an empty map or handle the error appropriately
     }
   }
@@ -73,7 +63,7 @@ class DatabaseHelper {
       }
       await Future.wait(deleteFutures);
     } catch (e) {
-      print('Error deleting all posts: $e');
+      return;
     }
   }
 }
@@ -81,7 +71,7 @@ class DatabaseHelper {
 class Upload extends StatefulWidget {
   final String email;
 
-  Upload({required this.email});
+  const Upload({required this.email});
 
   @override
   _UploadState createState() => _UploadState();
@@ -106,23 +96,15 @@ class _UploadState extends State<Upload> {
     // Retrieve all posts from the database
     List<Map<String, dynamic>> posts = await DatabaseHelper().getPosts();
 
-    // Print each post
-    for (var post in posts) {
-      print('Post ID: ${post['id']}');
-      print('Email: ${post['email']}');
-      print('Title: ${post['title']}');
-      print('Content: ${post['content']}');
-      print('Upvotes: ${post['upvotes']}');
-      print('------------');
-    }
+
   }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       
       appBar: AppBar(
-        backgroundColor: Color(0xFF023436),
-        title: Text(
+        backgroundColor: const Color(0xFF023436),
+        title: const Text(
           'Raise Issue',
           style: TextStyle(fontSize: 32),
         ),
@@ -131,19 +113,19 @@ class _UploadState extends State<Upload> {
         color: Colors.white,
         child: Column(
           children: [
-            SizedBox(height: 20),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
+            const SizedBox(height: 20),
             Container(
-              color: Color(0xFFF7F3F5),
-              padding: EdgeInsets.all(16),
+              color: const Color(0xFFF7F3F5),
+              padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  const Text(
                     'Subject',
                     style: TextStyle(fontSize: 20),
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   SubjectContainer(
                     onSubjectChanged: (value) {
                       setState(() {
@@ -154,20 +136,20 @@ class _UploadState extends State<Upload> {
                 ],
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Container(
-              color: Color(0xFFF7F3F5),
-              padding: EdgeInsets.symmetric(horizontal: 16),
+              color: const Color(0xFFF7F3F5),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  const Text(
                     'Issue Raised',
                     style: TextStyle(fontSize: 20),
                   ),
                   Container(
                     width: MediaQuery.of(context).size.width * 0.9,
-                    padding: EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(16),
                     child: TextField(
                       maxLines: null,
                       onChanged: (value) {
@@ -175,7 +157,7 @@ class _UploadState extends State<Upload> {
                           issue = value;
                         });
                       },
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         hintText: 'Write your issue...',
                         border: InputBorder.none,
                       ),
@@ -184,7 +166,7 @@ class _UploadState extends State<Upload> {
                 ],
               ),
             ),
-            Container(
+            SizedBox(
               width: MediaQuery.of(context).size.width * 0.7,
               height: MediaQuery.of(context).size.width * 0.1,
               child: ElevatedButton(
@@ -192,41 +174,41 @@ class _UploadState extends State<Upload> {
                   uploadIssue();
                   printPosts(); // Call the uploadIssue method
                   Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => dashboard(email : widget.email)),
-    );
-                },
+                  context,
+                  MaterialPageRoute(builder: (context) => dashboard(email : widget.email)),
+                    );
+                  },
                 style: ElevatedButton.styleFrom(
-                  primary: Color(0xFF023436),
-                  // Set the button color to #023436
-                ),
-                child: Text('Upload'),
+                  backgroundColor: const Color(0xFF023436),
+                        // Set the button color to #023436
+                      ),
+                      child: const Text('Upload'),
+                    ),
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-class SubjectContainer extends StatelessWidget {
-  final Function(String) onSubjectChanged;
+          );
+        }
+      }
+        class SubjectContainer extends StatelessWidget {
+          final Function(String) onSubjectChanged;
 
-  SubjectContainer({required this.onSubjectChanged});
+          const SubjectContainer({super.key, required this.onSubjectChanged});
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(16),
-      color: Colors.grey[200],
-      child: TextField(
-        onChanged: onSubjectChanged,
-        decoration: InputDecoration(
-          hintText: 'Subject',
-          border: OutlineInputBorder(),
-        ),
-      ),
-    );
-  }
-}
+          @override
+          Widget build(BuildContext context) {
+            return Container(
+              padding: const EdgeInsets.all(16),
+              color: Colors.grey[200],
+              child: TextField(
+                onChanged: onSubjectChanged,
+                decoration: const InputDecoration(
+                  hintText: 'Subject',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            );
+          }
+        }
 

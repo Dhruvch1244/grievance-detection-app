@@ -16,12 +16,12 @@ class DatabaseHelper {
   }
 
   Future<Database> initDb() async {
-    String databasesPath = await getDatabasesPath();
-    String path = join(databasesPath, 'Deshatsan.db');
 
     // Open/create the database at a given path
+    // Create your database tables here
+    String databasesPath = await getDatabasesPath();
+    String path = join(databasesPath, 'Deshatsan.db');
     return await openDatabase(path, version: 1, onCreate: (Database db, int version) async {
-      // Create your database tables here
       await db.execute('CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, firstName TEXT, lastName TEXT, email TEXT, password TEXT)');
     });
   }

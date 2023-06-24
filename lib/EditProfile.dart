@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_interpolation_to_compose_strings
-
 import 'package:flutter/material.dart';
 import 'package:Deshatan/MyProfile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -269,8 +267,8 @@ class _EditProfileState extends State<EditProfile> {
                 children: [
                   const SizedBox(height: 8.0),
                   Text(
-                    firstName + " " + lastName,
-                    style: TextStyle(
+                    "$firstName $lastName",
+                    style: const TextStyle(
                       color: Colors.black,
                     ),
                   ),
@@ -289,7 +287,7 @@ class _EditProfileState extends State<EditProfile> {
                   const SizedBox(height: 8.0),
                   Text(
                     phoneNumber,
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.black,
                     ),
                   ),
@@ -329,7 +327,7 @@ class _EditProfileState extends State<EditProfile> {
                   const SizedBox(height: 8.0),
                   Text(
                     widget.email,
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.black,
                     ),
                   ),
@@ -348,7 +346,7 @@ class _EditProfileState extends State<EditProfile> {
                   const SizedBox(height: 8.0),
                   Text(
                     description,
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.black,
                     ),
                   ),
@@ -379,25 +377,24 @@ class _EditProfileState extends State<EditProfile> {
 
               const SizedBox(height: 16.0),
               ElevatedButton(
-  onPressed: () {
-    // Save the form data
-    DatabaseHelper().updateUserProfile(widget.email, phoneNumber, description);
-    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => MyProfile(email : widget.email)),
-                    );
-  },
-  style: ElevatedButton.styleFrom(
-    backgroundColor: const Color(0xFF023436), // Specify the desired button color
-    minimumSize: const Size(double.infinity, 50), // Set the button width to match the parent
-  shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(30), // Set the border radius to 30
-    ),
+                onPressed: () {
+                  // Save the form data
+                  DatabaseHelper().updateUserProfile(widget.email, phoneNumber, description);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => MyProfile(email : widget.email)),
+                  );
+                },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF023436), // Specify the desired button color
+                minimumSize: const Size(double.infinity, 50), // Set the button width to match the parent
+                shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(30), // Set the border radius to 30
+                ),
 
-  ),
-  child: const Text('Save Changes'),
-),
-
+                ),
+                child: const Text('Save Changes'),
+              ),
             ],
           ),
         ),

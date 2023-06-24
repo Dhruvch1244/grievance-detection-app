@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class ProfilePage extends StatelessWidget {
   final String username;
 
-  ProfilePage({required this.username});
+  ProfilePage({super.key, required this.username});
 
   @override
   Widget build(BuildContext context) {
@@ -11,18 +11,18 @@ class ProfilePage extends StatelessWidget {
       appBar: AppBar(
         title: Text(username),
         
-        backgroundColor: Color(0xFF023436),
+        backgroundColor: const Color(0xFF023436),
       ),
-      backgroundColor: Color(0xFF023436),
+      backgroundColor: const Color(0xFF023436),
       body: Center(
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                margin: EdgeInsets.fromLTRB(0, 100, 0, 0),
-                child: Column(
+                padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                margin: const EdgeInsets.fromLTRB(0, 100, 0, 0),
+                child: const Column(
                   children: [
                     Text(
                       'Deshatan.',
@@ -36,10 +36,10 @@ class ProfilePage extends StatelessWidget {
                 ),
               ),
               Container(
-                margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                padding: EdgeInsets.fromLTRB(0, 10, 0, 60),
+                margin: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                padding: const EdgeInsets.fromLTRB(0, 10, 0, 60),
                 width: MediaQuery.of(context).size.width * 1,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: Color.fromARGB(255, 255, 255, 255),
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(48),
@@ -49,8 +49,8 @@ class ProfilePage extends StatelessWidget {
                 child: Column(
                   children: [
                     Container(
-                      padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                      child: Card(
+                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                      child: const Card(
                         child: CircleAvatar(
                           radius: 60,
                           backgroundImage: AssetImage('images/girl.jpg'),
@@ -59,17 +59,17 @@ class ProfilePage extends StatelessWidget {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
+                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
                       child: Text(
                         username,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 32,
                           fontWeight: FontWeight.bold,
                           color: Colors.black,
                         ),
                       ),
                     ),
-                    Row(
+                    const Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
@@ -88,7 +88,7 @@ class ProfilePage extends StatelessWidget {
                         ),
                       ],
                     ),
-                    Padding(
+                    const Padding(
                       padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
                       child: Text(
                         'Noida',
@@ -108,8 +108,8 @@ class ProfilePage extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Container(
-                            padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                            child: Card(
+                            padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                            child: const Card(
                               child: Text(
                                 'Reviews (02)',
                                 style: TextStyle(
@@ -120,46 +120,41 @@ class ProfilePage extends StatelessWidget {
                             ),
                           ),
                           Container(
-                            padding: EdgeInsets.fromLTRB(20, 0, 110, 0),
-                            child: Card(
+                            padding: const EdgeInsets.fromLTRB(20, 0, 110, 0),
+                            child: const Card(
                               child: Text(
                                 'Grievances',
                                 style: TextStyle(
-                                 
+                                fontSize: 16,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                        ),
 
-              fontSize: 16,
-              color: Colors.black,
-            ),
-          ),
-        ),
-      ),
+                      ],
 
-    ],
-  
-  ),
-  
-),
+                    ),
 
-Container(
-  height: 200,
-  width: 350,
-  child: ListView(
-    scrollDirection: Axis.horizontal,
-    children: [
-      _buildImageWithButton('images/Taj-Mahal.jpg', '⭐',EdgeInsets.all(24)),
-      _buildImageWithButton('images/hawamahal.webp',  '⭐',EdgeInsets.all(24)),
-      _buildImageWithButton('images/mysorepalace.webp',  '⭐',EdgeInsets.all(24)),
-      _buildImageWithButton('images/lakecity.webp',  '⭐',EdgeInsets.all(24)),
-      // Add more images here
-    ],
-  ),
-)
+                  ),
 
-                      
+                  SizedBox(
+                  height: 200,
+                  width: 350,
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: [
+                      _buildImageWithButton('images/Taj-Mahal.jpg', '⭐',const EdgeInsets.all(24)),
+                      _buildImageWithButton('images/hawamahal.webp',  '⭐',const EdgeInsets.all(24)),
+                      _buildImageWithButton('images/mysorepalace.webp',  '⭐',const EdgeInsets.all(24)),
+                      _buildImageWithButton('images/lakecity.webp',  '⭐',const EdgeInsets.all(24)),
+                      // Add more images here
+                      ],
+                    ),
+                  )
                     ],
                   ),
                 ),
-                
               ],
             ),
           ),
@@ -183,11 +178,11 @@ Widget _buildImageWithButton(String imagePath, String emoji, EdgeInsets padding)
           },
           icon: Text(
             emoji,
-            style: TextStyle(color: Colors.white),
+            style: const TextStyle(color: Colors.white),
           ),
-          label: Text('5'),
+          label: const Text('5'),
           style: ElevatedButton.styleFrom(
-            primary: Colors.green,
+            backgroundColor: Colors.green,
           ),
         ),
       ),

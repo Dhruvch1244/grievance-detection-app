@@ -8,7 +8,7 @@
 
 - [x] Working Post Feature
 
-- [ ] User profile Updating
+- [x] User profile Updating
 
 - [ ] Implementing sorting by location feature for post
 

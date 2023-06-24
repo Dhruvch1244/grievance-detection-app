@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'loginpage.dart';
 
+// The IndexPage widget represents the main page of the application.
 class IndexPage extends StatelessWidget {
+  const IndexPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF023436),
+      backgroundColor: const Color(0xFF023436),
       body: Center(
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              // Container for the app name and description.
               Container(
-                padding: EdgeInsets.fromLTRB(0, 200, 0, 150),
-                child: Column(
+                padding: const EdgeInsets.fromLTRB(0, 200, 0, 150),
+                child: const Column(
                   children: [
                     Text(
                       'Deshatan.',
@@ -35,8 +37,9 @@ class IndexPage extends StatelessWidget {
                   ],
                 ),
               ),
+              // Container for the login and sign up section.
               Container(
-                padding: EdgeInsets.fromLTRB(0, 0, 0, 150),
+                padding: const EdgeInsets.fromLTRB(0, 0, 0, 150),
                 height: MediaQuery.of(context).size.height * 0.5,
                 width: MediaQuery.of(context).size.width * 0.95,
                 decoration: BoxDecoration(
@@ -46,35 +49,39 @@ class IndexPage extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
+                    // Text indicating the purpose of the section.
+                    const Text(
                       'Log in or Sign up',
                       style: TextStyle(
                         fontSize: 18,
                         color: Colors.black,
                       ),
                     ),
-                    SizedBox(height: 8),
-                    Divider(
+                    const SizedBox(height: 8),
+                    // Divider line.
+                    const Divider(
                       color: Colors.grey,
                       thickness: 1,
                       indent: 16,
                       endIndent: 16,
                     ),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
+                    // Login button.
                     SizedBox(
                       width: 200,
                       height: 50,
                       child: ElevatedButton(
                         onPressed: () {
+                          // Navigate to the login page.
                           Navigator.pushNamed(context, '/login');
                         },
                         style: ElevatedButton.styleFrom(
-                          primary: Color(0xFF023436),
+                          backgroundColor: const Color(0xFF023436),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20),
                           ),
                         ),
-                        child: Text(
+                        child: const Text(
                           'Login',
                           style: TextStyle(
                             fontSize: 18,
@@ -83,22 +90,23 @@ class IndexPage extends StatelessWidget {
                         ),
                       ),
                     ),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
+                    // Sign up button.
                     SizedBox(
                       width: 200,
                       height: 50,
                       child: ElevatedButton(
                         onPressed: () {
-                          // Handle sign up button press
+                          // Handle sign up button press and navigate to the sign up page.
                           Navigator.pushNamed(context, '/signup');
                         },
                         style: ElevatedButton.styleFrom(
-                          primary: Color(0xFF023436),
+                          backgroundColor: const Color(0xFF023436),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20),
                           ),
                         ),
-                        child: Text(
+                        child: const Text(
                           'Sign Up',
                           style: TextStyle(
                             fontSize: 18,
@@ -117,4 +125,3 @@ class IndexPage extends StatelessWidget {
     );
   }
 }
-

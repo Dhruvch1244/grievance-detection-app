@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
+  const ChangePasswordScreen({super.key});
+
   @override
   _ChangePasswordScreenState createState() => _ChangePasswordScreenState();
 }
 
 class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
-  TextEditingController _currentPasswordController = TextEditingController();
-  TextEditingController _newPasswordController = TextEditingController();
-  TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _currentPasswordController = TextEditingController();
+  final TextEditingController _newPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
 
   @override
   void dispose() {
@@ -29,11 +31,11 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Error'),
-            content: Text('Please fill in all the password fields.'),
+            title: const Text('Error'),
+            content: const Text('Please fill in all the password fields.'),
             actions: [
               TextButton(
-                child: Text('OK'),
+                child: const Text('OK'),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
@@ -47,11 +49,11 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Error'),
-            content: Text('New password and confirm password do not match.'),
+            title: const Text('Error'),
+            content: const Text('New password and confirm password do not match.'),
             actions: [
               TextButton(
-                child: Text('OK'),
+                child: const Text('OK'),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
@@ -72,11 +74,11 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Success'),
-            content: Text('Password changed successfully.'),
+            title: const Text('Success'),
+            content: const Text('Password changed successfully.'),
             actions: [
               TextButton(
-                child: Text('OK'),
+                child: const Text('OK'),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
@@ -92,42 +94,42 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Change Password'),
-        backgroundColor: Color(0xFF023436),
+        title: const Text('Change Password'),
+        backgroundColor: const Color(0xFF023436),
       ),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
             TextField(
               controller: _currentPasswordController,
               obscureText: true,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Current Password',
               ),
             ),
             TextField(
               controller: _newPasswordController,
               obscureText: true,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'New Password',
               ),
             ),
             TextField(
               controller: _confirmPasswordController,
               obscureText: true,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Confirm New Password',
               ),
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-              primary: Color(0xFF023436),
+              backgroundColor: const Color(0xFF023436),
             ),
-
-              child: Text('Change Password'),
               onPressed: _changePassword,
+
+              child: const Text('Change Password'),
             ),
           ],
         ),

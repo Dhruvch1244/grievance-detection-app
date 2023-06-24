@@ -20,8 +20,8 @@ List<GrievanceR> grievances = [
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Grievances'),
-       backgroundColor: Color(0xFF023436),
+        title: const Text('Grievances'),
+       backgroundColor: const Color(0xFF023436),
       ),
       body: Center(
         
@@ -29,7 +29,7 @@ List<GrievanceR> grievances = [
           
           children: [
             
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
             Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -40,14 +40,14 @@ List<GrievanceR> grievances = [
                     // Handle location icon click
                     // Add your logic here
                   },
-                  child: Icon(
+                  child: const Icon(
                     Icons.location_on,
                     color: Colors.black,
                   ),
                 ),
               ),
-              SizedBox(width: 8),
-              Text(
+              const SizedBox(width: 8),
+              const Text(
                 'Noida, UP',
                 style: TextStyle(
                   fontSize: 32,
@@ -57,66 +57,65 @@ List<GrievanceR> grievances = [
             ],
           ),
             
-            SizedBox(height: 30),
+            const SizedBox(height: 30),
             Container(
       
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-      
-        border: Border.all(
-          
-          color: Colors.grey,
-          width: 1,
-        ),
-      ),
-      child: Center(
-        child: Text(
-          "What's Going in your area?",
-          style: TextStyle(fontSize: 24),
-          textAlign: TextAlign.center,
-        ),
-      ),
-    ),
-    
-              SizedBox(height: 30),
-    Expanded(
-        child: ListView.builder(
-          itemCount: grievances.length,
-          itemBuilder: (context, index) {
-            return ListTile(
-              title: Text(grievances[index].summary,
-              style: TextStyle(
-              ),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
 
+              border: Border.all(
+
+                color: Colors.grey,
+                width: 1,
               ),
-              trailing: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  IconButton(
-                    icon: Icon(Icons.thumb_up
-                   ,color : Color(0xFF023436)),
-                    onPressed: () {
-                      setState(() {
-                        grievances[index].upvotes++;
-                      });
-                    },
-                  ),
-                  Text('${grievances[index].upvotes}'),
-                  IconButton(
-                    icon: Icon(Icons.report,color : Color(0xFF023436),),
-                    onPressed: () {
-                      setState(() {
-                        grievances[index].reports++;
-                      });
-                    },
-                  ),
-                  Text('${grievances[index].reports}'),
-                ],
+            ),
+              child: const Center(
+                child: Text(
+                  "What's Going in your area?",
+                  style: TextStyle(fontSize: 24),
+                  textAlign: TextAlign.center,
+                ),
               ),
-            );
-          },
-        ),
-      ),
+            ),
+            const SizedBox(height: 30),
+            Expanded(
+                child: ListView.builder(
+                  itemCount: grievances.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Text(grievances[index].summary,
+                      style: const TextStyle(
+                      ),
+
+                      ),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.thumb_up
+                           ,color : Color(0xFF023436)),
+                            onPressed: () {
+                              setState(() {
+                                grievances[index].upvotes++;
+                              });
+                            },
+                          ),
+                          Text('${grievances[index].upvotes}'),
+                          IconButton(
+                            icon: const Icon(Icons.report,color : Color(0xFF023436),),
+                            onPressed: () {
+                              setState(() {
+                                grievances[index].reports++;
+                              });
+                            },
+                          ),
+                          Text('${grievances[index].reports}'),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ),
 
           ],
         ),
@@ -129,10 +128,10 @@ List<GrievanceR> grievances = [
 
 
 
-class GrievanceR {
-  final String summary;
-  int upvotes;
-  int reports;
+    class GrievanceR {
+      final String summary;
+      int upvotes;
+      int reports;
 
-  GrievanceR({required this.summary, required this.upvotes, required this.reports});
-}
+      GrievanceR({required this.summary, required this.upvotes, required this.reports});
+    }
