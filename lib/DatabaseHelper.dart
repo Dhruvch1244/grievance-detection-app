@@ -16,13 +16,14 @@ class DatabaseHelper {
   }
 
   Future<Database> initDb() async {
-
     // Open/create the database at a given path
     // Create your database tables here
     String databasesPath = await getDatabasesPath();
     String path = join(databasesPath, 'Deshatsan.db');
-    return await openDatabase(path, version: 1, onCreate: (Database db, int version) async {
-      await db.execute('CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, firstName TEXT, lastName TEXT, email TEXT, password TEXT)');
+    return await openDatabase(path, version: 1,
+        onCreate: (Database db, int version) async {
+      await db.execute(
+          'CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, firstName TEXT, lastName TEXT, email TEXT, password TEXT)');
     });
   }
 
@@ -35,7 +36,7 @@ class DatabaseHelper {
     Database? dbClient = await db;
     return await dbClient!.query('users');
   }
-  
+
   Future<Map<String, dynamic>> getUserByEmail(String email) async {
     Database? dbClient = await db;
     List<Map<String, dynamic>> users = await dbClient!.query(

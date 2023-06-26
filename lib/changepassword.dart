@@ -8,9 +8,11 @@ class ChangePasswordScreen extends StatefulWidget {
 }
 
 class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
-  final TextEditingController _currentPasswordController = TextEditingController();
+  final TextEditingController _currentPasswordController =
+      TextEditingController();
   final TextEditingController _newPasswordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
 
   @override
   void dispose() {
@@ -26,7 +28,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     String confirmPassword = _confirmPasswordController.text;
 
     // Validate password conditions
-    if (currentPassword.isEmpty || newPassword.isEmpty || confirmPassword.isEmpty) {
+    if (currentPassword.isEmpty ||
+        newPassword.isEmpty ||
+        confirmPassword.isEmpty) {
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -50,7 +54,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         builder: (BuildContext context) {
           return AlertDialog(
             title: const Text('Error'),
-            content: const Text('New password and confirm password do not match.'),
+            content:
+                const Text('New password and confirm password do not match.'),
             actions: [
               TextButton(
                 child: const Text('OK'),
@@ -125,10 +130,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
             const SizedBox(height: 16.0),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF023436),
-            ),
+                backgroundColor: const Color(0xFF023436),
+              ),
               onPressed: _changePassword,
-
               child: const Text('Change Password'),
             ),
           ],

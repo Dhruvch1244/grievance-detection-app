@@ -125,56 +125,52 @@ class _ReportIncidentScreenState extends State<ReportIncidentScreen> {
 
         showDialog(
           context: context,
-          builder: (context) =>
-              AlertDialog(
-                title: const Text('Success'),
-                content: const Text('Incident report submitted successfully.'),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-
-                    },
-                    child: const Text('OK'),
-                  ),
-                ],
+          builder: (context) => AlertDialog(
+            title: const Text('Success'),
+            content: const Text('Incident report submitted successfully.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text('OK'),
               ),
+            ],
+          ),
         );
       }).catchError((error) {
         showDialog(
           context: context,
-          builder: (context) =>
-              AlertDialog(
-                title: const Text('Error'),
-                content: Text(
-                    'An error occurred while submitting the report: $error'),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: const Text('OK'),
-                  ),
-                ],
+          builder: (context) => AlertDialog(
+            title: const Text('Error'),
+            content:
+                Text('An error occurred while submitting the report: $error'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text('OK'),
               ),
+            ],
+          ),
         );
       });
     } else {
       showDialog(
         context: context,
-        builder: (context) =>
-            AlertDialog(
-              title: const Text('Error'),
-              content: const Text('Please fill in all the required fields.'),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Text('OK'),
-                ),
-              ],
+        builder: (context) => AlertDialog(
+          title: const Text('Error'),
+          content: const Text('Please fill in all the required fields.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('OK'),
             ),
+          ],
+        ),
       );
     }
   }

@@ -3,27 +3,21 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class LoginPage extends StatefulWidget {
-
   const LoginPage({super.key});
 
   @override
-
   State<LoginPage> createState() => _LoginPageState();
 }
-class _LoginPageState extends State<LoginPage> {
 
+class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
 
   final TextEditingController _passwordController = TextEditingController();
 
   @override
-
   Widget build(BuildContext context) {
-
     return Scaffold(
-
       backgroundColor: const Color(0xFF023436),
-
       body: Center(
         child: SingleChildScrollView(
           child: Column(
@@ -92,49 +86,72 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                     const SizedBox(height: 16),
-
                     SizedBox(
-                    width: 200,
-                    height: 50,
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        String email = _emailController.text.trim();
-                        String password = _passwordController.text.trim();
+                      width: 200,
+                      height: 50,
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          String email = _emailController.text.trim();
+                          String password = _passwordController.text.trim();
 
-                        if (email.isNotEmpty && password.isNotEmpty) {
-                          DatabaseHelper databaseHelper = DatabaseHelper();
-                          bool credentialsValid = await databaseHelper.checkCredentials(email, password);
+                          if (email.isNotEmpty && password.isNotEmpty) {
+                            DatabaseHelper databaseHelper = DatabaseHelper();
+                            bool credentialsValid = await databaseHelper
+                                .checkCredentials(email, password);
 
-                          if (credentialsValid) {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: const Text('Success'),
-                                  content: const Text('User logged in'),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                        // You can navigate to another page upon successful login
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(builder: (context) => dashboard(email: email)),
-                                        );
-                                      },
-                                      child: const Text('OK'),
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
+                            if (credentialsValid) {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Text('Success'),
+                                    content: const Text('User logged in'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                          // You can navigate to another page upon successful login
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    dashboard(email: email)),
+                                          );
+                                        },
+                                        child: const Text('OK'),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            } else {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Text('Error'),
+                                    content: const Text(
+                                        'Incorrect username or password'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: const Text('OK'),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            }
                           } else {
                             showDialog(
                               context: context,
                               builder: (BuildContext context) {
                                 return AlertDialog(
                                   title: const Text('Error'),
-                                  content: const Text('Incorrect username or password'),
+                                  content: const Text(
+                                      'Email and password are required'),
                                   actions: [
                                     TextButton(
                                       onPressed: () {
@@ -147,34 +164,14 @@ class _LoginPageState extends State<LoginPage> {
                               },
                             );
                           }
-                        }
-                        else {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: const Text('Error'),
-                                content: const Text('Email and password are required'),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: const Text('OK'),
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF023436),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                    ),
-                      child: const Text(
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF023436),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                        ),
+                        child: const Text(
                           'Login',
                           style: TextStyle(
                             fontSize: 18,
@@ -208,6 +205,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
+
 class DatabaseHelper {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
@@ -224,4 +222,3 @@ class DatabaseHelper {
     }
   }
 }
-

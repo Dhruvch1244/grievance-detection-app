@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:Deshatan/MyProfile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-
 class DatabaseHelper {
   static final DatabaseHelper _instance = DatabaseHelper._internal();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -13,9 +12,11 @@ class DatabaseHelper {
 
   DatabaseHelper.internal();
   Future<Map<String, dynamic>> getUserByEmail(String email) async {
-    final CollectionReference usersRef = FirebaseFirestore.instance.collection('userdata');
+    final CollectionReference usersRef =
+        FirebaseFirestore.instance.collection('userdata');
 
-    QuerySnapshot usersSnapshot = await usersRef.where('email', isEqualTo: email).limit(1).get();
+    QuerySnapshot usersSnapshot =
+        await usersRef.where('email', isEqualTo: email).limit(1).get();
 
     if (usersSnapshot.docs.isNotEmpty) {
       // Get the first document from the snapshot
@@ -28,10 +29,13 @@ class DatabaseHelper {
 
     return {};
   }
-  Future<String> getPhoneByEmail(String email) async {
-    final CollectionReference usersRef = FirebaseFirestore.instance.collection('userdata');
 
-    QuerySnapshot usersSnapshot = await usersRef.where('email', isEqualTo: email).limit(1).get();
+  Future<String> getPhoneByEmail(String email) async {
+    final CollectionReference usersRef =
+        FirebaseFirestore.instance.collection('userdata');
+
+    QuerySnapshot usersSnapshot =
+        await usersRef.where('email', isEqualTo: email).limit(1).get();
 
     if (usersSnapshot.docs.isNotEmpty) {
       // Get the first document from the snapshot
@@ -55,19 +59,26 @@ class DatabaseHelper {
       return;
     }
   }
+
   Future<List<Map<String, dynamic>>> getPostsByEmail(String email) async {
     try {
       CollectionReference postsCollection = _firestore.collection('posts');
-      QuerySnapshot snapshot = await postsCollection.where('email', isEqualTo: email).get();
-      return snapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
+      QuerySnapshot snapshot =
+          await postsCollection.where('email', isEqualTo: email).get();
+      return snapshot.docs
+          .map((doc) => doc.data() as Map<String, dynamic>)
+          .toList();
     } catch (e) {
       return []; // Return an empty list or handle the error appropriately
     }
   }
-  Future<List<Map<String, dynamic>>> getUserProfilesByEmail(String email) async {
+
+  Future<List<Map<String, dynamic>>> getUserProfilesByEmail(
+      String email) async {
     try {
       CollectionReference usersCollection = _firestore.collection('userdata');
-      QuerySnapshot snapshot = await usersCollection.where('email', isEqualTo: email).get();
+      QuerySnapshot snapshot =
+          await usersCollection.where('email', isEqualTo: email).get();
 
       return snapshot.docs.map((doc) {
         return {
@@ -80,11 +91,12 @@ class DatabaseHelper {
     }
   }
 
-
-  Future<void> updateUserProfile(String email, String phoneNumber, String description) async {
+  Future<void> updateUserProfile(
+      String email, String phoneNumber, String description) async {
     try {
       CollectionReference usersCollection = _firestore.collection('userdata');
-      QuerySnapshot snapshot = await usersCollection.where('email', isEqualTo: email).get();
+      QuerySnapshot snapshot =
+          await usersCollection.where('email', isEqualTo: email).get();
 
       if (snapshot.docs.isNotEmpty) {
         DocumentSnapshot userDoc = snapshot.docs.first;
@@ -94,13 +106,11 @@ class DatabaseHelper {
           'phoneNumber': phoneNumber,
           'description': description,
         });
-
       }
     } catch (e) {
       return;
     }
   }
-
 }
 
 class EditProfile extends StatefulWidget {
@@ -129,14 +139,19 @@ class _EditProfileState extends State<EditProfile> {
   }
 
   Future<void> fetchUserProfile() async {
-    Map<String, dynamic> user = await DatabaseHelper().getUserByEmail(widget.email);
+    Map<String, dynamic> user =
+        await DatabaseHelper().getUserByEmail(widget.email);
     if (user.isNotEmpty) {
       setState(() {
         firstName = user['name'];
-        phoneNumber = user['phoneNumber'] ?? ''; // Set the initial value of phoneNumber
-        description = user['description'] ?? ''; // Set the initial value of description
-        phoneNumberController.text = phoneNumber; // Set the text in the phoneNumberController
-        descriptionController.text = description; // Set the text in the descriptionController
+        phoneNumber =
+            user['phoneNumber'] ?? ''; // Set the initial value of phoneNumber
+        description =
+            user['description'] ?? ''; // Set the initial value of description
+        phoneNumberController.text =
+            phoneNumber; // Set the text in the phoneNumberController
+        descriptionController.text =
+            description; // Set the text in the descriptionController
       });
     }
   }
@@ -148,14 +163,11 @@ class _EditProfileState extends State<EditProfile> {
     super.dispose();
   }
 
-    @override
-
+  @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Edit Profile'),
-        
         backgroundColor: const Color(0xFF023436),
       ),
       body: Padding(
@@ -187,7 +199,8 @@ class _EditProfileState extends State<EditProfile> {
                   // Example:
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => EditProfile(email : widget.email)),
+                    MaterialPageRoute(
+                        builder: (context) => EditProfile(email: widget.email)),
                   );
                 },
                 child: const Row(
@@ -234,7 +247,8 @@ class _EditProfileState extends State<EditProfile> {
                   // Example:
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => EditProfile(email: widget.email)),
+                    MaterialPageRoute(
+                        builder: (context) => EditProfile(email: widget.email)),
                   );
                 },
                 child: const Row(
@@ -291,15 +305,14 @@ class _EditProfileState extends State<EditProfile> {
                       color: Colors.black,
                     ),
                   ),
-
                   const SizedBox(height: 8.0),
                   TextField(
                     decoration: InputDecoration(
                       hintText: 'Edit Phone Number',
                       filled: false,
                       fillColor: Colors.grey[200],
-                      contentPadding:
-                      const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 12.0, horizontal: 16.0),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8.0),
                         borderSide: BorderSide.none,
@@ -350,15 +363,14 @@ class _EditProfileState extends State<EditProfile> {
                       color: Colors.black,
                     ),
                   ),
-
                   const SizedBox(height: 8.0),
                   TextField(
                     decoration: InputDecoration(
                       hintText: 'Description',
                       filled: false,
                       fillColor: Colors.grey[200],
-                      contentPadding:
-                      const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 12.0, horizontal: 16.0),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8.0),
                         borderSide: BorderSide.none,
@@ -379,19 +391,23 @@ class _EditProfileState extends State<EditProfile> {
               ElevatedButton(
                 onPressed: () {
                   // Save the form data
-                  DatabaseHelper().updateUserProfile(widget.email, phoneNumber, description);
+                  DatabaseHelper().updateUserProfile(
+                      widget.email, phoneNumber, description);
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => MyProfile(email : widget.email)),
+                    MaterialPageRoute(
+                        builder: (context) => MyProfile(email: widget.email)),
                   );
                 },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF023436), // Specify the desired button color
-                minimumSize: const Size(double.infinity, 50), // Set the button width to match the parent
-                shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(30), // Set the border radius to 30
-                ),
-
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(
+                      0xFF023436), // Specify the desired button color
+                  minimumSize: const Size(double.infinity,
+                      50), // Set the button width to match the parent
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(
+                        30), // Set the border radius to 30
+                  ),
                 ),
                 child: const Text('Save Changes'),
               ),
@@ -402,4 +418,3 @@ class _EditProfileState extends State<EditProfile> {
     );
   }
 }
-

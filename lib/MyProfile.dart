@@ -15,9 +15,11 @@ class DatabaseHelper {
 
   DatabaseHelper.internal();
   Future<Map<String, dynamic>> getUserByEmail(String email) async {
-    final CollectionReference usersRef = FirebaseFirestore.instance.collection('users');
+    final CollectionReference usersRef =
+        FirebaseFirestore.instance.collection('users');
 
-    QuerySnapshot usersSnapshot = await usersRef.where('email', isEqualTo: email).limit(1).get();
+    QuerySnapshot usersSnapshot =
+        await usersRef.where('email', isEqualTo: email).limit(1).get();
 
     if (usersSnapshot.docs.isNotEmpty) {
       // Get the first document from the snapshot
@@ -31,6 +33,7 @@ class DatabaseHelper {
 
     return {};
   }
+
   Future<void> updatePost(Map<String, dynamic> post) async {
     try {
       CollectionReference postsCollection = _firestore.collection('posts');
@@ -40,16 +43,19 @@ class DatabaseHelper {
       return;
     }
   }
+
   Future<List<Map<String, dynamic>>> getPostsByEmail(String email) async {
     try {
       CollectionReference postsCollection = _firestore.collection('posts');
-      QuerySnapshot snapshot = await postsCollection.where('email', isEqualTo: email).get();
-      return snapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
+      QuerySnapshot snapshot =
+          await postsCollection.where('email', isEqualTo: email).get();
+      return snapshot.docs
+          .map((doc) => doc.data() as Map<String, dynamic>)
+          .toList();
     } catch (e) {
       return []; // Return an empty list or handle the error appropriately
     }
   }
-
 }
 
 class MyProfile extends StatefulWidget {
@@ -62,13 +68,11 @@ class MyProfile extends StatefulWidget {
 }
 
 class _MyProfileState extends State<MyProfile> {
-
   String name = 'John Doe';
   String firstName = 'JohnDoe';
   String lastName = '1234';
 
   List<String> grievances = [];
-
 
   void addGrievance(String grievance) {
     setState(() {
@@ -81,8 +85,10 @@ class _MyProfileState extends State<MyProfile> {
     super.initState();
     fetchUserProfile();
   }
+
   Future<void> fetchUserProfile() async {
-    Map<String, dynamic> user = await DatabaseHelper().getUserByEmail(widget.email);
+    Map<String, dynamic> user =
+        await DatabaseHelper().getUserByEmail(widget.email);
     if (user.isNotEmpty) {
       setState(() {
         firstName = user['firstName'];
@@ -90,12 +96,11 @@ class _MyProfileState extends State<MyProfile> {
       });
     }
   }
-  @override
 
+  @override
   Widget build(BuildContext context) {
     String email = widget.email;
     return Scaffold(
-
       appBar: AppBar(
         title: const Text('My Profile'),
         backgroundColor: const Color(0xFF023436),
@@ -103,176 +108,173 @@ class _MyProfileState extends State<MyProfile> {
       body: Center(
         child: Column(
           children: [
-                  const SizedBox(height: 40),
-
+            const SizedBox(height: 40),
             Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-
-                      const SizedBox(height: 10),
-                              Text(
-                                firstName,
-                                style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                              ),
-                              IconButton(
-                                icon: const Icon(Icons.edit),
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(builder: (context) => EditProfile(email: email)),
-                                  );
-                                },
-                              ),
-                                 ],
-                          ),
-
-                      const SizedBox(height: 10),
-                      Text(
-                        email,
-                        style: const TextStyle(fontSize: 16),
-                      ),
-                      const SizedBox(height: 10),
-                      ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Upload(email : widget.email)),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF023436),
-                ),
-                child: const Text('Add Grievance'),
-              ),
-
-                    ],
-                  ),
-                        const SizedBox(width: 10),
-                        Container(
-                          margin: const EdgeInsets.fromLTRB(50, 0, 0, 0),
-                          width: 72,
-                          height: 72,
-                          decoration: const BoxDecoration(
-                            shape: BoxShape.circle,
-                            image: DecorationImage(
-                              image: AssetImage('images/OIP.jpeg'),
-                              fit: BoxFit.cover,
-                            ),
-                          ),
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const SizedBox(height: 10),
+                        Text(
+                          firstName,
+                          style: const TextStyle(
+                              fontSize: 24, fontWeight: FontWeight.bold),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.edit),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      EditProfile(email: email)),
+                            );
+                          },
                         ),
                       ],
                     ),
-                      Container(
-                                  margin: const EdgeInsets.fromLTRB(0, 30, 0, 0),
-
-                                          width: MediaQuery.of(context).size.width * 0.9,
-                          decoration: const BoxDecoration(
-                                border: Border(
-                              top: BorderSide(width: 1,color: Colors.grey),
-                              bottom: BorderSide(width: 1,color: Colors.grey),
-                            ),
-                          ),
-                        child: Row(
-
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                IconButton(
-
-                                icon: const Icon(Icons.arrow_upward_outlined),
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(builder: (context) => dashboard(email: email)),
-                                  );
-                                },
-                                iconSize: 45,
-                                padding: const EdgeInsets.all(0),
-                                constraints: const BoxConstraints(),
-                                visualDensity: VisualDensity.compact,
-                                alignment: Alignment.center,
-                                splashRadius: 45,
-                                highlightColor: Colors.transparent,
-                                color: Colors.black,
-                                splashColor: Colors.transparent,
-                                enableFeedback: true,
-                                tooltip: 'Upvote',
-                              ),
-
-                                  const Text('Upvotes'),
-                                    ],
-                                  ),
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                IconButton(
-                                  icon: const Icon(Icons.notifications),
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(builder: (context) => SettingsScreen()),
-                                    );
-                                  },
-                                  iconSize: 45,
-                                  padding: const EdgeInsets.all(0),
-                                  constraints: const BoxConstraints(),
-                                  visualDensity: VisualDensity.compact,
-                                  alignment: Alignment.center,
-                                  splashRadius: 45,
-                                  highlightColor: Colors.transparent,
-                                  color: Colors.black,
-                                  splashColor: Colors.transparent,
-                                  enableFeedback: true,
-                                  tooltip: 'Notifications',
-                                ),
-
-                            const Text('Notifications'),
-                              ],
-                            ),
-                                  Column(
-                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                          children: [
-                                            IconButton(
-                                                icon: const Icon(Icons.settings),
-                                                onPressed: () {
-                                                  Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(builder: (context) => SettingsScreen()),
-                                                  );
-                                    },
-                                    iconSize: 45,
-                                    padding: const EdgeInsets.all(0),
-                                    constraints: const BoxConstraints(),
-                                    visualDensity: VisualDensity.compact,
-                                    alignment: Alignment.center,
-                                    splashRadius: 45,
-                                    highlightColor: Colors.transparent,
-                                    color: Colors.black,
-                                    splashColor: Colors.transparent,
-                                    enableFeedback: true,
-                                    tooltip: 'Settings',
-                                  ),
-
-                                        const Text('Settings'),
-                                  ],
-                                ),
+                    const SizedBox(height: 10),
+                    Text(
+                      email,
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                    const SizedBox(height: 10),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  Upload(email: widget.email)),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF023436),
+                      ),
+                      child: const Text('Add Grievance'),
+                    ),
                   ],
                 ),
+                const SizedBox(width: 10),
+                Container(
+                  margin: const EdgeInsets.fromLTRB(50, 0, 0, 0),
+                  width: 72,
+                  height: 72,
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                      image: AssetImage('images/OIP.jpeg'),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Container(
+              margin: const EdgeInsets.fromLTRB(0, 30, 0, 0),
+              width: MediaQuery.of(context).size.width * 0.9,
+              decoration: const BoxDecoration(
+                border: Border(
+                  top: BorderSide(width: 1, color: Colors.grey),
+                  bottom: BorderSide(width: 1, color: Colors.grey),
+                ),
               ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.arrow_upward_outlined),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => dashboard(email: email)),
+                          );
+                        },
+                        iconSize: 45,
+                        padding: const EdgeInsets.all(0),
+                        constraints: const BoxConstraints(),
+                        visualDensity: VisualDensity.compact,
+                        alignment: Alignment.center,
+                        splashRadius: 45,
+                        highlightColor: Colors.transparent,
+                        color: Colors.black,
+                        splashColor: Colors.transparent,
+                        enableFeedback: true,
+                        tooltip: 'Upvote',
+                      ),
+                      const Text('Upvotes'),
+                    ],
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.notifications),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => SettingsScreen()),
+                          );
+                        },
+                        iconSize: 45,
+                        padding: const EdgeInsets.all(0),
+                        constraints: const BoxConstraints(),
+                        visualDensity: VisualDensity.compact,
+                        alignment: Alignment.center,
+                        splashRadius: 45,
+                        highlightColor: Colors.transparent,
+                        color: Colors.black,
+                        splashColor: Colors.transparent,
+                        enableFeedback: true,
+                        tooltip: 'Notifications',
+                      ),
+                      const Text('Notifications'),
+                    ],
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.settings),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => SettingsScreen()),
+                          );
+                        },
+                        iconSize: 45,
+                        padding: const EdgeInsets.all(0),
+                        constraints: const BoxConstraints(),
+                        visualDensity: VisualDensity.compact,
+                        alignment: Alignment.center,
+                        splashRadius: 45,
+                        highlightColor: Colors.transparent,
+                        color: Colors.black,
+                        splashColor: Colors.transparent,
+                        enableFeedback: true,
+                        tooltip: 'Settings',
+                      ),
+                      const Text('Settings'),
+                    ],
+                  ),
+                ],
+              ),
+            ),
             Expanded(
               child: FutureBuilder<List<Map<String, dynamic>>>(
-                future: DatabaseHelper().getPostsByEmail(widget.email), // Create an instance of DatabaseHelper and call getPosts()
+                future: DatabaseHelper().getPostsByEmail(widget
+                    .email), // Create an instance of DatabaseHelper and call getPosts()
                 builder: (context, snapshot) {
-
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const CircularProgressIndicator();
                   } else if (snapshot.hasError) {
@@ -298,24 +300,21 @@ class _MyProfileState extends State<MyProfile> {
                                 ),
                               ],
                             ),
-
                             child: Post(
-
                               title: posts[i]['title'],
-                              author: posts[i]['email'], // Assuming the email field stores the author name
+                              author: posts[i][
+                                  'email'], // Assuming the email field stores the author name
                               content: posts[i]['content'],
                               upvotes: posts[i]['upvotes'],
                             ),
                           ),
                       ],
                     );
-
                   } else {
                     return const Text('No posts available.');
                   }
                 },
               ),
-
             ),
           ],
         ),
@@ -323,7 +322,6 @@ class _MyProfileState extends State<MyProfile> {
     );
   }
 }
-
 
 class Post extends StatefulWidget {
   final String title;
@@ -385,9 +383,7 @@ class _PostState extends State<Post> {
           ),
           const SizedBox(height: 8),
           GestureDetector(
-            onTap: () {
-
-            },
+            onTap: () {},
             child: Text(
               'Posted by u/${widget.author}',
               style: const TextStyle(
@@ -396,9 +392,6 @@ class _PostState extends State<Post> {
               ),
             ),
           ),
-
-
-
           const SizedBox(height: 8),
           Text(widget.content),
           const SizedBox(height: 8),

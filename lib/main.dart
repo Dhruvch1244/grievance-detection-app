@@ -14,7 +14,6 @@ import 'Report.dart';
 import 'changepassword.dart';
 import 'package:firebase_core/firebase_core.dart';
 
-
 import 'firebase_options.dart';
 
 // This is the main function that runs the Flutter application.
@@ -60,15 +59,15 @@ class MyApp extends StatelessWidget {
         '/': (context) => const IndexPage(),
         '/login': (context) => LoginPage(),
         '/signup': (context) => SignUpPage(),
-        '/dashboard': (context) => dashboard(email : 'Advika@gmail.com'),
-        '/upload': (context) => Upload(email : '12'),
+        '/dashboard': (context) => dashboard(email: 'Advika@gmail.com'),
+        '/upload': (context) => Upload(email: '12'),
         '/profile': (context) => ProfilePage(username: 'Advika'),
-        '/MyProfile' : (context) => MyProfile(email : '12'),
-        '/EditProfile' : (context) => const EditProfile(email : '12'),
-        '/Grevience' : (context) => Grievance(),
-        '/News' : (context) => News(),
-        '/Report' : (context) => ReportIncidentScreen(),
-        '/changep' : (context) => ChangePasswordScreen(),
+        '/MyProfile': (context) => MyProfile(email: '12'),
+        '/EditProfile': (context) => const EditProfile(email: '12'),
+        '/Grevience': (context) => Grievance(),
+        '/News': (context) => News(),
+        '/Report': (context) => ReportIncidentScreen(),
+        '/changep': (context) => ChangePasswordScreen(),
       },
     );
   }

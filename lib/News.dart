@@ -8,7 +8,7 @@ class News extends StatefulWidget {
 }
 
 class _NewsState extends State<News> {
-var Newss = <NewsR>[
+  var Newss = <NewsR>[
     NewsR(summary: "Power outage in T nagar area", upvotes: 10, reports: 2),
     NewsR(summary: "Poor road conditions", upvotes: 5, reports: 1),
     NewsR(summary: "Lack of clean drinking water", upvotes: 8, reports: 3),
@@ -21,16 +21,13 @@ var Newss = <NewsR>[
     return Scaffold(
       appBar: AppBar(
         title: const Text('News'),
-       backgroundColor: const Color(0xFF023436),
+        backgroundColor: const Color(0xFF023436),
       ),
       body: Center(
-        
         child: Column(
-          
           children: [
-            
-              const SizedBox(height: 30),
-              Row(
+            const SizedBox(height: 30),
+            Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Align(
@@ -56,15 +53,11 @@ var Newss = <NewsR>[
                 ),
               ],
             ),
-
-              const SizedBox(height: 30),
-              Container(
-      
+            const SizedBox(height: 30),
+            Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
-
                 border: Border.all(
-
                   color: Colors.grey,
                   width: 1,
                 ),
@@ -77,24 +70,22 @@ var Newss = <NewsR>[
                 ),
               ),
             ),
-    
-              const SizedBox(height: 30),
-          Expanded(
+            const SizedBox(height: 30),
+            Expanded(
               child: ListView.builder(
                 itemCount: Newss.length,
                 itemBuilder: (context, index) {
                   return ListTile(
-                    title: Text(Newss[index].summary,
-                    style: const TextStyle(
-                    ),
-
+                    title: Text(
+                      Newss[index].summary,
+                      style: const TextStyle(),
                     ),
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         IconButton(
-                          icon: const Icon(Icons.thumb_up
-                         ,color : Color(0xFF023436)),
+                          icon: const Icon(Icons.thumb_up,
+                              color: Color(0xFF023436)),
                           onPressed: () {
                             setState(() {
                               Newss[index].upvotes++;
@@ -103,7 +94,10 @@ var Newss = <NewsR>[
                         ),
                         Text('${Newss[index].upvotes}'),
                         IconButton(
-                          icon: const Icon(Icons.report,color : Color(0xFF023436),),
+                          icon: const Icon(
+                            Icons.report,
+                            color: Color(0xFF023436),
+                          ),
                           onPressed: () {
                             setState(() {
                               Newss[index].reports++;
@@ -117,17 +111,12 @@ var Newss = <NewsR>[
                 },
               ),
             ),
-
           ],
         ),
-        
       ),
     );
   }
 }
-
-
-
 
 class NewsR {
   final String summary;

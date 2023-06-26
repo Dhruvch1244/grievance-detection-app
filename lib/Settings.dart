@@ -64,7 +64,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
         onTap: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => ChangePasswordScreen(),
+            MaterialPageRoute(
+              builder: (context) => ChangePasswordScreen(),
             ),
           );
         },
@@ -79,8 +80,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
         onTap: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const IndexPage(),
-          ),
+            MaterialPageRoute(
+              builder: (context) => const IndexPage(),
+            ),
           );
         },
       ),
@@ -102,5 +104,4 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ),
     );
   }
-
 }

@@ -10,7 +10,6 @@ class ProfilePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(username),
-        
         backgroundColor: const Color(0xFF023436),
       ),
       backgroundColor: const Color(0xFF023436),
@@ -125,44 +124,46 @@ class ProfilePage extends StatelessWidget {
                               child: Text(
                                 'Grievances',
                                 style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.black,
+                                  fontSize: 16,
+                                  color: Colors.black,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-
-                      ],
-
+                        ],
+                      ),
                     ),
-
-                  ),
-
-                  SizedBox(
-                  height: 200,
-                  width: 350,
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    children: [
-                      _buildImageWithButton('images/Taj-Mahal.jpg', '⭐',const EdgeInsets.all(24)),
-                      _buildImageWithButton('images/hawamahal.webp',  '⭐',const EdgeInsets.all(24)),
-                      _buildImageWithButton('images/mysorepalace.webp',  '⭐',const EdgeInsets.all(24)),
-                      _buildImageWithButton('images/lakecity.webp',  '⭐',const EdgeInsets.all(24)),
-                      // Add more images here
-                      ],
-                    ),
-                  )
-                    ],
-                  ),
+                    SizedBox(
+                      height: 200,
+                      width: 350,
+                      child: ListView(
+                        scrollDirection: Axis.horizontal,
+                        children: [
+                          _buildImageWithButton('images/Taj-Mahal.jpg', '⭐',
+                              const EdgeInsets.all(24)),
+                          _buildImageWithButton('images/hawamahal.webp', '⭐',
+                              const EdgeInsets.all(24)),
+                          _buildImageWithButton('images/mysorepalace.webp', '⭐',
+                              const EdgeInsets.all(24)),
+                          _buildImageWithButton('images/lakecity.webp', '⭐',
+                              const EdgeInsets.all(24)),
+                          // Add more images here
+                        ],
+                      ),
+                    )
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
-      );
+      ),
+    );
+  }
 }
-}
-Widget _buildImageWithButton(String imagePath, String emoji, EdgeInsets padding) {
+
+Widget _buildImageWithButton(
+    String imagePath, String emoji, EdgeInsets padding) {
   return Stack(
     children: [
       Padding(
@@ -189,4 +190,3 @@ Widget _buildImageWithButton(String imagePath, String emoji, EdgeInsets padding)
     ],
   );
 }
-

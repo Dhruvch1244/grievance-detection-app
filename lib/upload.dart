@@ -1,6 +1,7 @@
 import 'package:Deshatan/Dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 class DatabaseHelper {
   static final DatabaseHelper _instance = DatabaseHelper._internal();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -23,12 +24,13 @@ class DatabaseHelper {
     try {
       CollectionReference postsCollection = _firestore.collection('posts');
       QuerySnapshot snapshot = await postsCollection.get();
-      return snapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
+      return snapshot.docs
+          .map((doc) => doc.data() as Map<String, dynamic>)
+          .toList();
     } catch (e) {
       return []; // Return an empty list or handle the error appropriately
     }
   }
-
 
   Future<void> updatePost(Map<String, dynamic> post) async {
     try {
@@ -43,7 +45,8 @@ class DatabaseHelper {
   Future<Map<String, dynamic>> getUserByEmail(String email) async {
     try {
       CollectionReference usersCollection = _firestore.collection('users');
-      QuerySnapshot snapshot = await usersCollection.where('email', isEqualTo: email).limit(1).get();
+      QuerySnapshot snapshot =
+          await usersCollection.where('email', isEqualTo: email).limit(1).get();
       if (snapshot.docs.isNotEmpty) {
         return snapshot.docs.first.data() as Map<String, dynamic>;
       }
@@ -92,16 +95,15 @@ class _UploadState extends State<Upload> {
     };
     await DatabaseHelper().insertPost(post);
   }
+
   Future<void> printPosts() async {
     // Retrieve all posts from the database
     List<Map<String, dynamic>> posts = await DatabaseHelper().getPosts();
-
-
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
       appBar: AppBar(
         backgroundColor: const Color(0xFF023436),
         title: const Text(
@@ -174,41 +176,42 @@ class _UploadState extends State<Upload> {
                   uploadIssue();
                   printPosts(); // Call the uploadIssue method
                   Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => dashboard(email : widget.email)),
-                    );
-                  },
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => dashboard(email: widget.email)),
+                  );
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF023436),
-                        // Set the button color to #023436
-                      ),
-                      child: const Text('Upload'),
-                    ),
-                  ),
-                ],
+                  // Set the button color to #023436
+                ),
+                child: const Text('Upload'),
               ),
             ),
-          );
-        }
-      }
-        class SubjectContainer extends StatelessWidget {
-          final Function(String) onSubjectChanged;
+          ],
+        ),
+      ),
+    );
+  }
+}
 
-          const SubjectContainer({super.key, required this.onSubjectChanged});
+class SubjectContainer extends StatelessWidget {
+  final Function(String) onSubjectChanged;
 
-          @override
-          Widget build(BuildContext context) {
-            return Container(
-              padding: const EdgeInsets.all(16),
-              color: Colors.grey[200],
-              child: TextField(
-                onChanged: onSubjectChanged,
-                decoration: const InputDecoration(
-                  hintText: 'Subject',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-            );
-          }
-        }
+  const SubjectContainer({super.key, required this.onSubjectChanged});
 
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      color: Colors.grey[200],
+      child: TextField(
+        onChanged: onSubjectChanged,
+        decoration: const InputDecoration(
+          hintText: 'Subject',
+          border: OutlineInputBorder(),
+        ),
+      ),
+    );
+  }
+}
