@@ -14,7 +14,7 @@
 
 - [ ] Adding support for summarizing text.
 
-- [] Implementing Apis 
+- [ ] Implementing Apis 
 
 ## Contributors
 
